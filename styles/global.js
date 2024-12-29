@@ -10,9 +10,9 @@ export const fonts = {
 export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: 'grey',
+        //alignItems: 'center',
+        //justifyContent: 'flex-end',
     }, 
     textNormalItalic: {
         fontFamily: fonts.italic,
@@ -24,11 +24,23 @@ export const globalStyles = StyleSheet.create({
     },
     textNormalRegular: {
         fontFamily: fonts.regular,
-        fontSize: 20,
+        fontSize: 16,
     },
     textNormalBold: {
         fontFamily: fonts.bold,
         fontSize: 20,
     },
+    logo: {
+        fontFamily: fonts.bold,
+        fontSize: 40,
+        color: 'white',
+    },
+    navigationText: {
+        fontFamily: fonts.regular,
+        fontSize: 16,
+        lineHeight: 25,
+        letterSpacing: 0.5,
+        color: 'white',
+    }
      
 });
