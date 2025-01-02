@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 export const fonts = {
     italic: 'RedHatDisplay-Italic',
-    light: 'RedHatDisplay-Light',
     regular: 'RedHatDisplay-Regular',
     bold: 'RedHatDisplay-Bold',
 };
@@ -10,17 +9,13 @@ export const fonts = {
 export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'grey',
+        //backgroundColor: 'grey',
         //alignItems: 'center',
         //justifyContent: 'flex-end',
     }, 
     textNormalItalic: {
         fontFamily: fonts.italic,
-        fontSize: 20,
-    },
-    textNormalLight: {
-        fontFamily: fonts.light,
-        fontSize: 20,
+        fontSize: 16,
     },
     textNormalRegular: {
         fontFamily: fonts.regular,
@@ -28,7 +23,7 @@ export const globalStyles = StyleSheet.create({
     },
     textNormalBold: {
         fontFamily: fonts.bold,
-        fontSize: 20,
+        fontSize: 16,
     },
     logo: {
         fontFamily: fonts.bold,
