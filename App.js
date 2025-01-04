@@ -8,14 +8,17 @@ import HomeScreen from './view/screens/HomeScreen';
 import OrderScreen from './view/screens/LastOrderScreen';
 import ProfileScreen from './view/screens/ProfileScreen';
 
+//COMPONENTS
+import TabNavigation from './view/components/TabNavigation';
+
 //ICONS
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useState } from 'react';
 
 export default function App() {
+  
   const [fontsLoaded] = useFonts({
     [fonts.italic]: require('./assets/fonts/RedHatDisplay-Italic.ttf'),
     [fonts.regular]: require('./assets/fonts/RedHatDisplay-Regular.ttf'),
@@ -61,19 +64,21 @@ export default function App() {
       }
        
       <View style={{position: 'relative', bottom: 0, backgroundColor: '#327432', flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Pressable onPress={() => changeScreen('Home')} style={{flex:1, alignItems: 'center', paddingVertical: 15}}>
-          <Feather name="home" size={25} color="white" />
-          <Text style={globalStyles.navigationText}>Menu</Text>
-        </Pressable>
-        <Pressable onPress={() => changeScreen('Ordine')} style={{flex:1, alignItems: 'center',  paddingVertical: 15}}>
-          
-          <Feather name="shopping-bag" size={24} color="white" />
-          <Text style={globalStyles.navigationText}>Ordine</Text>
-        </Pressable>
-        <Pressable onPress={() => changeScreen('Profilo')} style={{flex:1, alignItems: 'center', paddingVertical: 15}}>
-          <FontAwesome5 name="user" size={24} color="white" />
-          <Text style={globalStyles.navigationText}>Profilo</Text>
-        </Pressable>
+        <TabNavigation onChangeScreen={changeScreen} currentScreen={currentScreen} name="Home">
+          {currentScreen === 'Home' ? 
+              <Ionicons name="home-sharp" size={24} color="white" /> : <Ionicons name="home-outline" size={25} color="white" />
+          }
+        </TabNavigation>
+        <TabNavigation onChangeScreen={changeScreen} currentScreen={currentScreen} name="Ordine">
+          {currentScreen === 'Ordine' ? 
+            <MaterialCommunityIcons name="shopping" size={25} color="white" /> : <MaterialCommunityIcons name="shopping-outline" size={25} color="white" /> 
+          }
+        </TabNavigation>
+        <TabNavigation onChangeScreen={changeScreen} currentScreen={currentScreen} name="Profilo">
+          {currentScreen === 'Profilo' ? 
+            <FontAwesome5 name="user-alt" size={24} color="white" /> : <FontAwesome5 name="user" size={24} color="white" /> 
+          }   
+        </TabNavigation>
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>
