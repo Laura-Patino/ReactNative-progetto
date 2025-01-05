@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 import { globalStyles, fonts } from './styles/global';
 import { useFonts } from 'expo-font';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import ViewModel from './viewmodel/ViewModel';
 //SCREENS
 import HomeScreen from './view/screens/HomeScreen';
 import OrderScreen from './view/screens/LastOrderScreen';
@@ -26,15 +27,39 @@ export default function App() {
   });
 
   const [currentScreen, setCurrentScreen] = useState('Home');
+  const [sessionUser, setSessionUser] = useState(null);
 
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
     console.log('Screen changed to: ', screen);
   }
 
+  init = async () => {
+    try {
+      const viewModel = new ViewModel();
+      const session = await viewModel.initializeApp();
+      setSessionUser(session);
+    } catch (error) {
+      console.error("Errore durante l'inizializzazione dell'App: ", error);
+    }
+  }
+
   useEffect(() => {
     console.log('----App useEffect----');
-  }, []);
+    const initializeApp = async () => {
+      if (!sessionUser) {
+        console.log('(1) SessionUser is null');
+        await init();
+      }
+      if (sessionUser) {
+        console.log('(2) SessionUser is not null:', sessionUser);
+        //TODO: firstRun true -> posizione di default
+        //    firstRun false -> chiedere permessi e recuperare posizione 
+      }
+    };
+
+    initializeApp();
+  }, [sessionUser]);
 
   if (!fontsLoaded) {
     return (
@@ -50,7 +75,7 @@ export default function App() {
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
-        <HomeScreen />
+        <HomeScreen user={sessionUser}/>
       )}
       {
         currentScreen === "Ordine" && (
@@ -63,7 +88,7 @@ export default function App() {
         )
       }
        
-      <View style={{position: 'relative', bottom: 0, backgroundColor: '#327432', flexDirection: 'row', justifyContent: 'space-around'}}>
+      <View style={styles.navStyle}>
         <TabNavigation onChangeScreen={changeScreen} currentScreen={currentScreen} name="Home">
           {currentScreen === 'Home' ? 
               <Ionicons name="home-sharp" size={24} color="white" /> : <Ionicons name="home-outline" size={25} color="white" />
@@ -86,6 +111,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({ 
+  navStyle: {
+    position: 'relative', 
+    bottom: 0, 
+    backgroundColor: '#327432', 
+    flexDirection: 'row', 
+    justifyContent: 'space-around',
+  },
   regular: {
     ...globalStyles.textNormalRegular,
     color: 'red',

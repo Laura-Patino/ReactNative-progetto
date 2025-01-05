@@ -2,7 +2,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { globalStyles, fonts } from '../../styles/global';
 import { useEffect } from 'react';
 
-export default function HomeScreen() {
+export default function HomeScreen({user}) {
     useEffect(() => {
         console.log('----HomeScreen useEffect----');
     }, []);
@@ -10,7 +10,7 @@ export default function HomeScreen() {
     return (
         <View style={{flex: 1, paddingHorizontal:10}}>
             <View style={{borderBottomWidth: 2, borderBottomColor: 'black'}}>
-                <Text style={styles.bold}>Benvenuto</Text>
+                <Text style={styles.bold}>Benvenuto{', ' + user.uid}</Text>
             </View>
             <Text>Open up App.js to start working on your app!</Text>
             <Text style={styles.regular}>Testo di esempio</Text>
