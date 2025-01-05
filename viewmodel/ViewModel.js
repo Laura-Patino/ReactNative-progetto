@@ -3,8 +3,14 @@ import DBController from "../model/DBController";
 import CommunicationController from "../model/CommunicationController";
 
 export default class ViewModel {
-    
+    static instance = null;
+
     constructor() {
+        if (ViewModel.instance) {
+            return ViewModel.instance;
+        }
+        ViewModel.instance = this;
+
         this.db = new DBController();
         this.sid = null,
         this.uid = null,
@@ -15,11 +21,11 @@ export default class ViewModel {
         const isFirstRun = await StorageManager.isFirstRun(); 
         
         if (isFirstRun) { 
-            console.log("primo avvio");
+            console.log("(VM) primo avvio");
             this.firstRun = true;
             await this.firstLaunch(); 
         } else {
-            console.log("secondo avvio");
+            console.log("(VM) secondo avvio");
             this.firstRun = false;
             await this.otherLaunch();
         }
@@ -52,7 +58,23 @@ export default class ViewModel {
         console.log("\tLogin! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
     }
 
-    async fetchMenuData(mid, latitude, longitude) { //49 
+    async fetchAllMenus(latitude, longitude) {
+        console.log("(VM) Richiesta di tutti i menu...");
+        const allmenus = await CommunicationController.getMenus(this.sid, latitude, longitude);
+        console.log("\t...Ricevuti. Dati del primo menu:", allmenus[0]);
+
+        allmenus.forEach( async (menu, index) => {
+            const details = await this.fetchMenuDetails(menu.mid, latitude, longitude);
+            allmenus[index].image = details.image;
+            
+            console.log("\t...Dettagli del menu scaricati: [", index ,"]", details.mid, '-', details.name);
+            
+        });
+        return allmenus;
+
+    }
+
+    async fetchMenuDetails(mid, latitude, longitude) { //49 
         try {
             //Richiesta di DETAILS di un menu: mid, name, price, location, imageVersion, shortDescription, deliveryTime, longDescription
             const menuFromServer = await CommunicationController.getMenuDetails(mid, this.sid, latitude, longitude);
@@ -76,7 +98,10 @@ export default class ViewModel {
                     //scarico dal server l'immagine aggiornata
                     const imageFromServer = await CommunicationController.getMenuImage(menuFromServer.mid, this.sid); 
                     //aggiorno l'immagine e la versione nel db
-                    const imageWithPrefix = "data:image/png;base64," + imageFromServer.base64;
+                    let imageWithPrefix = imageFromServer.base64;
+                    if (!imageWithPrefix.startsWith("data:image/png;base64,")) 
+                        imageWithPrefix = "data:image/png;base64," + imageFromServer.base64;
+
                     await this.db.updateMenuImage(mid, menuFromServer.imageVersion, imageWithPrefix);
 
                     return {
@@ -88,7 +113,7 @@ export default class ViewModel {
                 //se il menu non è presente nel db, lo aggiungo
                 console.log("Inserimento menu nel db...")
                 const imageFromServer = await CommunicationController.getMenuImage(menuFromServer.mid, this.sid); //ottengo l'immagine del menu
-                //console.log("\tImmagineFromServer", imageFromServer); //base64: '...'
+                //console.log("\tImmagineFromServer", imageFromServer); //base64: '/9j/...'
 
                 let imageWithPrefix = imageFromServer.base64;
                 if (!imageWithPrefix.startsWith("data:image/png;base64,")) 

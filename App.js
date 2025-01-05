@@ -28,6 +28,7 @@ export default function App() {
 
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [sessionUser, setSessionUser] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState(null);
 
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
@@ -37,8 +38,9 @@ export default function App() {
   init = async () => {
     try {
       const viewModel = new ViewModel();
-      const session = await viewModel.initializeApp();
-      setSessionUser(session);
+      await viewModel.initializeApp().then((session) => setSessionUser(session))
+      .catch((error) => console.error("App Errore: ", error));
+      
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
     }
@@ -75,7 +77,7 @@ export default function App() {
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
-        <HomeScreen user={sessionUser}/>
+        <HomeScreen user={sessionUser} onChangeScreen={changeScreen}/>
       )}
       {
         currentScreen === "Ordine" && (
@@ -115,6 +117,8 @@ const styles = StyleSheet.create({
     position: 'relative', 
     bottom: 0, 
     backgroundColor: '#327432', 
+    //borderTopColor: 'white',
+    //borderTopWidth: 2,
     flexDirection: 'row', 
     justifyContent: 'space-around',
   },
