@@ -24,7 +24,7 @@ export default class DBController {
         const query = "INSERT INTO MenuImage(mid, imageVersion, image) VALUES (?, ?, ?);";
         try {
             const res = await this.db.runAsync(query, mid, imageVersion, image); //runAsync usata per inserire dati
-            console.log("DBController.insertMenuImage() ", res.lastInsertRowId, res.changes);
+            //console.log("DBController.insertMenuImage() ", res.lastInsertRowId, res.changes);
         } catch (error) {
             console.error("DBController.insertMenuImage Errore inserimento menu: ", error);
         }
@@ -57,7 +57,7 @@ export default class DBController {
         const query = "UPDATE MenuImage SET image = ?, imageVersion = ? WHERE mid = ?;";
         try {
             const result = await this.db.runAsync(query, newimage, newImageVersion, mid);
-            console.log(result.lastInsertRowId, result.changes);
+            //console.log(result.lastInsertRowId, result.changes);
         } catch (error) {
             console.error("Errore aggiornamento immagine: ", error);
         }

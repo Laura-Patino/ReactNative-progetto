@@ -61,17 +61,43 @@ export default class ViewModel {
     async fetchAllMenus(latitude, longitude) {
         console.log("(VM) Richiesta di tutti i menu...");
         const allmenus = await CommunicationController.getMenus(this.sid, latitude, longitude);
-        console.log("\t...Ricevuti. Dati del primo menu:", allmenus[0]);
+        console.log("\t...Ricevuti", allmenus.length);
 
-        allmenus.forEach( async (menu, index) => {
-            const details = await this.fetchMenuDetails(menu.mid, latitude, longitude);
-            allmenus[index].image = details.image;
-            
-            console.log("\t...Dettagli del menu scaricati: [", index ,"]", details.mid, '-', details.name);
-            
-        });
         return allmenus;
+    }
 
+    async fetchMenuImage(mid, imageVersion) {
+        try {
+            const menuImageFromDB = await this.db.getImageMenu(mid, imageVersion); //menu in DB e versione immagine corrispondono
+
+            if (menuImageFromDB) {
+                console.log("(VM)...Menu trovato nel db, versione immagine corrispondenti");
+                return menuImageFromDB.image;
+            }
+
+            const menuInfoFromDB = await this.db.getMenuByMid(mid); //menu in DB ma versione immagine diversa
+            const newImageFromServer = await CommunicationController.getMenuImage(mid, this.sid);
+
+            let imageWithPrefix = newImageFromServer.base64;
+            if (!imageWithPrefix.startsWith("data:image/png;base64,")) 
+                imageWithPrefix = "data:image/png;base64," + newImageFromServer.base64;
+
+            if (menuInfoFromDB && menuInfoFromDB.imageVersion !== imageVersion) {
+                console.warn("(VM)...Menu", mid ," trovato nel db, ma immagini diverse [", menuInfoFromDB.imageVersion, imageVersion, "]");
+                await this.db.updateMenuImage(mid, imageVersion, imageWithPrefix);
+                return imageWithPrefix;
+            } else {
+                console.warn("(VM)...Menu non trovato nel db");
+                //console.log("Immagine dal server:", newImageFromServer.base64);
+                await this.db.insertMenuImage(mid, imageVersion, imageWithPrefix);
+                return imageWithPrefix;
+                
+            }
+        } catch (error) {
+            console.error("Errore recupero solo immagine menu: ", error);
+            
+        }
+        
     }
 
     async fetchMenuDetails(mid, latitude, longitude) { //49 

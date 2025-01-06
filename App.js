@@ -38,8 +38,8 @@ export default function App() {
   init = async () => {
     try {
       const viewModel = new ViewModel();
-      await viewModel.initializeApp().then((session) => setSessionUser(session))
-      .catch((error) => console.error("App Errore: ", error));
+      const sessione = await viewModel.initializeApp();
+      setSessionUser(sessione);
       
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
@@ -61,9 +61,9 @@ export default function App() {
     };
 
     initializeApp();
-  }, [sessionUser]);
+  }, []); //sessionUser
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !sessionUser) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
@@ -107,7 +107,7 @@ export default function App() {
           }   
         </TabNavigation>
       </View>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" backgroundColor='#327432'/>
     </SafeAreaView>
   );
 }

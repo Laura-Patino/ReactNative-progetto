@@ -15,16 +15,16 @@ export const globalStyles = StyleSheet.create({
         //justifyContent: 'flex-end',
     }, 
     divider: {
-        borderTopColor: 'grey', 
-        borderWidth:1, 
-        marginHorizontal:5, 
-        marginVertical:15
+        borderColor: '#cfccc4', 
+        borderTopWidth: 2, 
+        marginHorizontal: 0, 
+        marginVertical: 15
     }, 
     smallImage: {
         width: 110, 
         height: 110, 
-        borderWidth:1, 
-        borderColor: 'green', 
+        //borderWidth:1, 
+        //borderColor: 'green', 
         alignSelf: 'center', 
         flex: 1
     },
