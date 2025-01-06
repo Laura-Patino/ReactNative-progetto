@@ -12,7 +12,7 @@ import MenuList from '../components/MenuList';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export default function HomeScreen({user, onchangeScreen}) {
+export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
   
   const viewModel = new ViewModel();
   const [allMenus, setAllMenus] = useState(null);
@@ -86,8 +86,9 @@ export default function HomeScreen({user, onchangeScreen}) {
               keyExtractor={(item) => item.mid.toString()} 
               ItemSeparatorComponent={() => <View style={globalStyles.divider}/>} 
               renderItem={({item}) => (
-                <MenuItem item={item} />
+                <MenuItem item={item} onChangeScreen={onChangeScreen} onMenuSelection={onMenuSelection}/>
               )}
+              
               style={{height: "100%"}}
             />
             

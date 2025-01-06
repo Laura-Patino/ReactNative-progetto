@@ -21,12 +21,12 @@ export const globalStyles = StyleSheet.create({
         marginVertical: 15
     }, 
     smallImage: {
-        width: 110, 
-        height: 110, 
+        width: 120, 
+        height: 120, 
         //borderWidth:1, 
         //borderColor: 'green', 
-        alignSelf: 'center', 
-        flex: 1
+        //alignSelf: 'center', 
+        //flex: 1
     },
     textSmallRegular: {
         fontFamily: fonts.regular,

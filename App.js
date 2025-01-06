@@ -8,6 +8,7 @@ import ViewModel from './viewmodel/ViewModel';
 import HomeScreen from './view/screens/HomeScreen';
 import OrderScreen from './view/screens/LastOrderScreen';
 import ProfileScreen from './view/screens/ProfileScreen';
+import MenuDetailsScreen from './view/screens/MenuDetailsScreen';
 
 //COMPONENTS
 import TabNavigation from './view/components/TabNavigation';
@@ -33,6 +34,10 @@ export default function App() {
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
     console.log('Screen changed to: ', screen);
+  }
+
+  const handleMenuSelection = (menu) => {
+    setSelectedMenu(menu);
   }
 
   init = async () => {
@@ -77,8 +82,13 @@ export default function App() {
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
-        <HomeScreen user={sessionUser} onChangeScreen={changeScreen}/>
+        <HomeScreen user={sessionUser} onChangeScreen={changeScreen} onMenuSelection={handleMenuSelection}/>
       )}
+      {
+        currentScreen === "Dettagli" && (
+          <MenuDetailsScreen user={sessionUser} menu={selectedMenu} onChangeScreen={changeScreen}/>
+        )
+      }
       {
         currentScreen === "Ordine" && (
           <OrderScreen />
