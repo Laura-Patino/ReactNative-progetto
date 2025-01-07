@@ -6,11 +6,6 @@ import ViewModelPosition from '../../viewmodel/viewModelPosition';
 
 //COMPONENTS
 import MenuItem from '../components/MenuItem';
-import MenuList from '../components/MenuList';
-
-//ICONS
-import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
   
@@ -61,7 +56,6 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
           </View>
           <View style={styles.bodyContent}>
             
-          
             <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a Milano</Text>
 
             {/* {<View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -88,7 +82,6 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
               renderItem={({item}) => (
                 <MenuItem item={item} onChangeScreen={onChangeScreen} onMenuSelection={onMenuSelection}/>
               )}
-              
               style={{height: "100%"}}
             />
             

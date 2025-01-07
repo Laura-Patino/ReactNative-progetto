@@ -32,9 +32,16 @@ export const globalStyles = StyleSheet.create({
         fontFamily: fonts.regular,
         fontSize: 15,
     },
+    textSmallBold: {
+        fontFamily: fonts.bold,
+        fontSize: 15,
+    },
     textNormalItalic: {
         fontFamily: fonts.italic,
-        fontSize: 16,
+        fontSize: 17,
+        color: 'brown',
+        textAlign: 'center',
+        paddingBottom: 5
     },
     textNormalRegular: {
         fontFamily: fonts.regular,
@@ -47,7 +54,8 @@ export const globalStyles = StyleSheet.create({
     },
     textBigRegular: {
         fontFamily: fonts.regular,
-        fontSize: 23,
+        fontSize: 22,
+        letterSpacing: 0.3,
     },
     textBigBold: {
         fontFamily: fonts.bold,
@@ -59,6 +67,7 @@ export const globalStyles = StyleSheet.create({
         fontSize: 20,
         color: 'black',
         textAlign: 'center',
+        paddingBottom: 5
     },
     logo: {
         fontFamily: fonts.bold,

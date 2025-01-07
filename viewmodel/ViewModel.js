@@ -17,6 +17,14 @@ export default class ViewModel {
         this.firstRun = null
     }
 
+    getSessionUser() {
+        return {
+            sid: this.sid,
+            uid: this.uid,
+            firstRun: this.firstRun,
+        }
+    }
+
     async initializeApp() {
         const isFirstRun = await StorageManager.isFirstRun(); 
         

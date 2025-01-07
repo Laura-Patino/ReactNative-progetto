@@ -12,6 +12,18 @@ export default function MenuItem({item, onChangeScreen, onMenuSelection}) {
         onChangeScreen('Dettagli');
     }
 
+    const formattedTime = (minutes) => {
+        if (minutes < 60)
+            return `${minutes} min`;
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        if (hours > 1)  
+            return `${hours} ore e ${mins} min`;
+        if (mins === 0)
+            return `${hours} ora`;
+        return `${hours} ora e ${mins} min`;
+    }
+
     return (
     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
         <View style={styles.imageContainer}>
@@ -23,7 +35,7 @@ export default function MenuItem({item, onChangeScreen, onMenuSelection}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={[globalStyles.textSmallRegular]}> € {item?.price} | </Text>
                 <Ionicons name="time-outline" size={15} color="black" /> 
-                <Text style={[globalStyles.textSmallRegular]}> {item?.deliveryTime} min</Text>
+                <Text style={[globalStyles.textSmallRegular]}> {formattedTime(item?.deliveryTime)}</Text>
             </View>
             <Text style={[globalStyles.textNormalRegular, {paddingBottom: 15}]}>{item?.shortDescription}</Text>
             <Pressable style={{position: 'absolute', bottom: 0, right: 0}} onPress={() => onSelectedMenu(item?.mid)}>

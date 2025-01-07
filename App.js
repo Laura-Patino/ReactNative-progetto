@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { globalStyles, fonts } from './styles/global';
 import { useFonts } from 'expo-font';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import ViewModel from './viewmodel/ViewModel';
+import ViewModelPosition from './viewmodel/viewModelPosition';
+
 //SCREENS
 import HomeScreen from './view/screens/HomeScreen';
 import OrderScreen from './view/screens/LastOrderScreen';
@@ -30,6 +32,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [sessionUser, setSessionUser] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [coordinates, setCoordinates] = useState(null);
 
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
@@ -45,6 +48,26 @@ export default function App() {
       const viewModel = new ViewModel();
       const sessione = await viewModel.initializeApp();
       setSessionUser(sessione);
+
+      if (sessione && !sessione.firstRun) {
+        let canUseLocation = await ViewModelPosition.askPermission();
+        if (canUseLocation) {
+          console.log('(3.1) Can use location');
+          ViewModelPosition.getCurrentLocation().then((location) => {
+            setCoordinates({...location.coords, latitudeDelta: 0.007, longitudeDelta: 0.007});
+            console.log('\t...Coordinates:', location.coords);
+          });
+        } else {
+          console.log('(3.1) Cannot use location');
+          
+          Alert.alert('Permesso per accedere alla posizione non concesso', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
+            {
+              text: 'OK',
+              onPress: () => console.log('OK Pressed')
+            }
+          ]);
+        }
+      }
       
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
@@ -57,12 +80,19 @@ export default function App() {
       if (!sessionUser) {
         console.log('(1) SessionUser is null');
         await init();
+        
       }
-      if (sessionUser) {
-        console.log('(2) SessionUser is not null:', sessionUser);
-        //TODO: firstRun true -> posizione di default
-        //    firstRun false -> chiedere permessi e recuperare posizione 
-      }
+      // if (sessionUser) {
+      //   console.log('(2) SessionUser is not null:', sessionUser);
+      //   // Solo al secondo avvio chiedo i permessi per la posizione
+      //   if (!sessionUser.firstRun) {
+      //     console.log('(3) Asking for location permission...');
+      //     await getCoordinates();
+      //   }
+      //   //TODO: firstRun true -> posizione di default
+      //   //    firstRun false -> chiedere permessi e recuperare posizione 
+      // }
+      
     };
 
     initializeApp();
@@ -79,6 +109,17 @@ export default function App() {
     );
   } 
 
+  if (!sessionUser.firstRun && !coordinates) {
+    return (
+      <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
+        <View>
+          <Text style={[globalStyles.textBigBold, {color: 'white'}]}>Ottenimento coordinate</Text>
+          <ActivityIndicator size='large' color='yellow'/>
+        </View>
+      </SafeAreaView> 
+    );
+  }
+
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
@@ -86,7 +127,7 @@ export default function App() {
       )}
       {
         currentScreen === "Dettagli" && (
-          <MenuDetailsScreen user={sessionUser} menu={selectedMenu} onChangeScreen={changeScreen}/>
+          <MenuDetailsScreen user={sessionUser} selectedMenuMid={selectedMenu} onChangeScreen={changeScreen}/>
         )
       }
       {
