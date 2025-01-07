@@ -113,7 +113,8 @@ export default function App() {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
-          <Text style={[globalStyles.textBigBold, {color: 'white'}]}>Ottenimento coordinate</Text>
+          <Text style={globalStyles.logo}>Mangia e Basta</Text>
+          <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento coordinate...</Text>
           <ActivityIndicator size='large' color='yellow'/>
         </View>
       </SafeAreaView> 

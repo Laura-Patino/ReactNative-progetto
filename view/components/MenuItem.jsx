@@ -30,7 +30,7 @@ export default function MenuItem({item, onChangeScreen, onMenuSelection}) {
             <Image source={item?.image ? {uri: item.image} : require('../../assets/images/ImageNotAvailable.jpg')} style={globalStyles.smallImage}/>
 
         </View>
-        <View style={{flex: 2}}>
+        <View style={{flex: 2, paddingLeft: 10}}>
             <Text style={globalStyles.textNormalBold}>{item?.name}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={[globalStyles.textSmallRegular]}> € {item?.price} | </Text>
