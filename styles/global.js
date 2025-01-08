@@ -74,6 +74,13 @@ export const globalStyles = StyleSheet.create({
         fontSize: 35,
         color: 'white',
     },
+    headerTitle: {
+        fontFamily: fonts.bold,
+        fontSize: 22,
+        color: 'white',
+        textAlign: 'center',
+        letterSpacing: 0.3,
+    },
     navigationText: {
         fontFamily: fonts.regular,
         fontSize: 16,

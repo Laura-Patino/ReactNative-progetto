@@ -7,32 +7,30 @@ import ViewModelPosition from '../../viewmodel/viewModelPosition';
 //COMPONENTS
 import MenuItem from '../components/MenuItem';
 
-export default function HomeScreen({user, onChangeScreen, onMenuSelection, coords}) {
+export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
   
   const viewModel = new ViewModel();
   const [allMenus, setAllMenus] = useState(null);
-  
   const [address, setAddress] = useState(null);
 
   const convertCoordinatesToAddress = async (coords) => {
-    console.warn("(HS) Converting coordinates to address..");
-    
+    console.log("(HS) Converting coordinates to address...");
     const res =  await ViewModelPosition.getAddressFromCoordinates(coords);
     console.warn('(HS) Address:', res);
     setAddress(res);
-    
   }
+
+  // {const fetchUserDetails = async () => {
+  //   const userDetails = await viewModel.getUserDetails();
+  //   console.log('(HS) User details:', userDetails);
+  // };}
 
   useEffect(() => {
       console.log('----HomeScreen useEffect----');
-      console.log('\t(HS) User:', user); 
-      console.log('\t(HS) Coordinates:', coords);
-
-      //Recupero i menu e le immagini
 
       const fetchMenusAndImage = async (latitude, longitude) => {
         const menus = await viewModel.fetchAllMenus(latitude, longitude);
-  
+        
         //Recupero immagini per ogni menu
         const updatedMenus = await Promise.all(
           menus.map(async (menu) => {
@@ -47,21 +45,21 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection, coord
         )
 
         setAllMenus(updatedMenus);
-        
-        // //TODO: DEVO PRIMA OTTENERE I PERMESSI PER LA POSIZIONE
-        //const response = await ViewModelPosition.getAddressFromCoordinates(coordinates);
-        //console.log('Address:', response);
       };
 
-      if (coords === "null") {
+      if (coords == null) {
         console.log('\t(HS)Coordinates are null');
         setAddress("Milano");
+        fetchMenusAndImage();
       } else {
         console.log('\t(HS) Coordinates are not null:', coords.latitude, coords.longitude);
         // chiamo funzione per convertire le coordinate in indirizzo
         convertCoordinatesToAddress(coords);
+        fetchMenusAndImage(coords.latitude, coords.longitude);
       }
-      fetchMenusAndImage();
+
+      //fetchUserDetails();
+      
   }, []);
 
   if (allMenus == null) {
@@ -74,28 +72,11 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection, coord
   return (
       <View style={{flex: 1}}>
           <View style={{ marginBottom: 10, marginHorizontal:15}}>
-              <Text style={[globalStyles.textBigBold, {color: 'white'}]}>Benvenuto{', ' + user?.uid + ', firstRun:' + user?.firstRun}</Text>
+              <Text style={globalStyles.headerTitle}>Mangia e Basta</Text>
           </View>
           <View style={styles.bodyContent}>
             
             <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a {address}</Text>
-
-            {/* {<View style={{flexDirection: 'row', justifyContent: 'center'}}>
-              <Image source={allMenus[0].image ? {uri: allMenus[0].image} : require('../../assets/images/ImageNotAvailable.jpg')} style={globalStyles.smallImage}/>
-              <View style={{marginLeft: 10, flex: 2}}>
-                <Text style={globalStyles.textNormalBold}>{allMenus[0].name}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[globalStyles.textSmallRegular]}> € {allMenus[0].price} | </Text>
-                  <Ionicons name="time-outline" size={15} color="black" /> 
-                  <Text style={[globalStyles.textSmallRegular]}> {allMenus[0].deliveryTime} min</Text>
-                </View>
-                <Text style={globalStyles.textNormalRegular}>{allMenus[0].shortDescription}</Text>
-
-              </View>
-              <Pressable style={{position: 'absolute', bottom: 0, right:10}} onPress={() => console.log('pressed', allMenus[0].image)}>
-                  <FontAwesome name="arrow-circle-right" size={40} color="brown" />
-                </Pressable>
-            </View>} */}
 
             <FlatList 
               data={allMenus} 

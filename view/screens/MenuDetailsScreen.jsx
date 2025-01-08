@@ -5,17 +5,19 @@ import ViewModel from '../../viewmodel/ViewModel';
 
 //ICONS
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 const viewModel = new ViewModel();
 
-export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen}) {
+export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coords}) {
     const [user, setUser] = useState(null);
     const [menuDetails, setMenuDetails] = useState(null);
+    
     const [canDoOrder, setCanDoOrder] = useState(false); //TODO: DA MODIFICARE
 
-    const getMenuDetails = async () => {
+    const getMenuDetails = async (latitude, longitude) => {
         try {
-            const menuResponse = await viewModel.fetchMenuDetails(selectedMenuMid);
+            const menuResponse = await viewModel.fetchMenuDetails(selectedMenuMid, latitude, longitude);
             setMenuDetails(menuResponse);
         } catch (error) {
             console.error('(MDS) Errore durante il recupero dei dettagli del menu:', error);
@@ -40,7 +42,8 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen}) {
         console.log('\tUser:', sessione.sid); 
         console.log('\tMenu:', selectedMenuMid);
 
-        getMenuDetails();
+        if (coords == null) getMenuDetails();
+        else getMenuDetails(coords.latitude, coords.longitude);
     }, []);
 
     if (user == null || menuDetails == null) {
@@ -55,7 +58,7 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen}) {
         <View style={{flex: 1}}>
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View style={{ marginBottom: 10, marginHorizontal:15}}>
-                    <Text style={[globalStyles.textBigBold, {color: 'white', textAlign: 'center'}]}>Dettagli menu</Text>
+                    <Text style={globalStyles.headerTitle}>Dettagli menu</Text>
                     <Pressable style={{position: 'absolute', top: 0, left: 5}} onPress={() => onChangeScreen('Home')}>
                         <FontAwesome name="arrow-circle-left" size={40} color="white" />
                     </Pressable>
@@ -70,12 +73,17 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen}) {
                     <Text style={globalStyles.textNormalRegular}>
                         <Text style={globalStyles.textNormalBold}>Descrizione: </Text>{menuDetails.longDescription ? menuDetails.longDescription : "Lunga descrizione"}</Text>
 
+                    {/* {<View style={globalStyles.divider}/>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                        <FontAwesome5 name="map-marker-alt" size={26} color="#327432"/>
+                        <Text style={globalStyles.textNormalBold}> Milano, Italia</Text>
+                    </View>} */}
                     <View style={globalStyles.divider}/>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
                         <Text style={globalStyles.textBigRegular}>Prezzo: {menuDetails.price} €</Text>
                         <Text style={globalStyles.textBigRegular}>Pronto in: {formattedTime(menuDetails.deliveryTime)}</Text>
                     </View>
-                    <Text style={globalStyles.textNormalRegular}>Benvenuto{', ' + user?.uid + ', firstRun:' + user?.firstRun}</Text>
+                    {/* {<Text style={globalStyles.textNormalRegular}>Benvenuto{', ' + user?.uid + ', firstRun:' + user?.firstRun}</Text>} */}
                     <View style={globalStyles.divider}/>
                     <Button title="Ordina" color={'brown'} disabled={!canDoOrder} onPress={() => console.log('pressed')}/>
                     {!canDoOrder && <Text style={styles.warningText}>Non è ancora possibile ordinare un menu</Text>}

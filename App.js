@@ -61,8 +61,8 @@ export default function App() {
         
       } else {
         console.log('(3.1) Cannot use location');
-        setCoordinates("null");
-        Alert.alert('Permesso per accedere alla posizione non concesso', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
+        setCoordinates(null);
+        Alert.alert('Lettura posizione non autorizzata', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
           {
             text: 'OK',
             onPress: () => console.log('OK Pressed')
@@ -83,7 +83,7 @@ export default function App() {
       if (sessione && !sessione.firstRun) {
         await getCoordinates();
       } else if (sessione && sessione.firstRun) {
-        setCoordinates("null");
+        setCoordinates(null);
       }
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
@@ -140,16 +140,16 @@ export default function App() {
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
-        <HomeScreen user={sessionUser} onChangeScreen={changeScreen} onMenuSelection={handleMenuSelection} coords={coordinates}/>
+        <HomeScreen onChangeScreen={changeScreen} onMenuSelection={handleMenuSelection} coords={coordinates}/>
       )}
       {
         currentScreen === "Dettagli" && (
-          <MenuDetailsScreen user={sessionUser} selectedMenuMid={selectedMenu} onChangeScreen={changeScreen}/>
+          <MenuDetailsScreen selectedMenuMid={selectedMenu} onChangeScreen={changeScreen} coords={coordinates}/>
         )
       }
       {
         currentScreen === "Ordine" && (
-          <OrderScreen />
+          <OrderScreen onChangeScreen={changeScreen}/>
         )
       }
       {

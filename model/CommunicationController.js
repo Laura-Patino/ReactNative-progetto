@@ -37,6 +37,7 @@ export default class CommunicationController {
             const errorObj = await httpResponse.json();
             console.log("(0) Errore dal server:", errorObj);
             throw errorObj;
+            //return errorObj;
         }
         
     }

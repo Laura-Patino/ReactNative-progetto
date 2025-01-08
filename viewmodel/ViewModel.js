@@ -68,10 +68,13 @@ export default class ViewModel {
 
     async fetchAllMenus(latitude, longitude) {
         console.log("(VM) Richiesta di tutti i menu...");
-        const allmenus = await CommunicationController.getMenus(this.sid, latitude, longitude);
-        console.log("\t...Ricevuti", allmenus.length);
-
-        return allmenus;
+        try {
+            const allmenus = await CommunicationController.getMenus(this.sid, latitude, longitude);
+            console.log("\t...Ricevuti", allmenus.length); 
+            return allmenus;
+        } catch (error) {
+            console.error("Errore nel recupero di tutti i menu:", error);
+        }
     }
 
     async fetchMenuImage(mid, imageVersion) {
@@ -166,4 +169,31 @@ export default class ViewModel {
         }
     }
       
+    async getUserDetails() {
+        try {
+            const userInfo = await CommunicationController.getUserInfo(this.uid, this.sid);
+            return userInfo;
+        } catch (error) {
+            console.error("Errore nel recupero delle informazioni dell'utente:", error);
+        }
+    }
+
+    async userIsRegistered() {
+        const fieldsUser =  await this.getUserDetails();
+        console.log("(VM) fieldsUser", fieldsUser); 
+    }
+
+    async updateUserDetails(bodyParams) {
+        //TODO
+    }
+
+    async buyMenu(mid) {
+        //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
+        //params: { sid, deliveryLocation}
+    }
+
+    async getOrderDetails(oid) {
+        //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
+
+    }
 }
