@@ -54,12 +54,12 @@ export const globalStyles = StyleSheet.create({
     },
     textBigRegular: {
         fontFamily: fonts.regular,
-        fontSize: 22,
+        fontSize: 20,
         letterSpacing: 0.3,
     },
     textBigBold: {
         fontFamily: fonts.bold,
-        fontSize: 23,
+        fontSize: 22,
         letterSpacing: 0.3,
     },
     sottotitolo: {
@@ -71,7 +71,7 @@ export const globalStyles = StyleSheet.create({
     },
     logo: {
         fontFamily: fonts.bold,
-        fontSize: 40,
+        fontSize: 35,
         color: 'white',
     },
     navigationText: {

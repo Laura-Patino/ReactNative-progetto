@@ -20,6 +20,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useState } from 'react';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export default function App() {
   
@@ -43,6 +44,36 @@ export default function App() {
     setSelectedMenu(menu);
   }
 
+  const getCoordinates = async () => {
+    try {
+      let canUseLocation = await ViewModelPosition.askPermission();
+      if (canUseLocation) {
+        console.log('(3.1) Can use location');
+        
+        ViewModelPosition.getCurrentLocation().then((location) => {
+          console.log('\t...(3.1.1) Coordinates: lat=', location.coords.latitude, "lon=", location.coords.longitude);
+
+          setCoordinates({
+            latitude: location.coords.latitude, 
+            longitude: location.coords.longitude
+          });
+        });
+        
+      } else {
+        console.log('(3.1) Cannot use location');
+        setCoordinates("null");
+        Alert.alert('Permesso per accedere alla posizione non concesso', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
+          {
+            text: 'OK',
+            onPress: () => console.log('OK Pressed')
+          }
+        ]);
+      }
+    } catch (error) {
+      console.error('(A) Error getting location permission:', error);
+    }
+  }
+
   init = async () => {
     try {
       const viewModel = new ViewModel();
@@ -50,25 +81,10 @@ export default function App() {
       setSessionUser(sessione);
 
       if (sessione && !sessione.firstRun) {
-        let canUseLocation = await ViewModelPosition.askPermission();
-        if (canUseLocation) {
-          console.log('(3.1) Can use location');
-          ViewModelPosition.getCurrentLocation().then((location) => {
-            setCoordinates({...location.coords, latitudeDelta: 0.007, longitudeDelta: 0.007});
-            console.log('\t...Coordinates:', location.coords);
-          });
-        } else {
-          console.log('(3.1) Cannot use location');
-          
-          Alert.alert('Permesso per accedere alla posizione non concesso', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
-            {
-              text: 'OK',
-              onPress: () => console.log('OK Pressed')
-            }
-          ]);
-        }
+        await getCoordinates();
+      } else if (sessione && sessione.firstRun) {
+        setCoordinates("null");
       }
-      
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
     }
@@ -102,14 +118,14 @@ export default function App() {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
-          <Text style={globalStyles.logo}>Mangia e Basta</Text>
+          <Text style={globalStyles.logo}>Mangia e Basta .</Text>
           <ActivityIndicator size='large' color='yellow'/>
         </View>
       </SafeAreaView> 
     );
   } 
 
-  if (!sessionUser.firstRun && !coordinates) {
+  if (sessionUser && !sessionUser.firstRun && !coordinates) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
@@ -124,7 +140,7 @@ export default function App() {
   return (
     <SafeAreaView style={globalStyles.container}>
       { currentScreen === "Home" && (
-        <HomeScreen user={sessionUser} onChangeScreen={changeScreen} onMenuSelection={handleMenuSelection}/>
+        <HomeScreen user={sessionUser} onChangeScreen={changeScreen} onMenuSelection={handleMenuSelection} coords={coordinates}/>
       )}
       {
         currentScreen === "Dettagli" && (

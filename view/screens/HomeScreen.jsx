@@ -7,18 +7,31 @@ import ViewModelPosition from '../../viewmodel/viewModelPosition';
 //COMPONENTS
 import MenuItem from '../components/MenuItem';
 
-export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
+export default function HomeScreen({user, onChangeScreen, onMenuSelection, coords}) {
   
   const viewModel = new ViewModel();
   const [allMenus, setAllMenus] = useState(null);
   
-  const [coordinates, setCoordinates] = useState(null); //TODO: DA RECUPERARE DALLA POSIZIONE
+  const [address, setAddress] = useState(null);
+
+  const convertCoordinatesToAddress = async (coords) => {
+    console.warn("(HS) Converting coordinates to address..");
+    
+    const res =  await ViewModelPosition.getAddressFromCoordinates(coords);
+    console.warn('(HS) Address:', res);
+    setAddress(res);
+    
+  }
 
   useEffect(() => {
       console.log('----HomeScreen useEffect----');
-      console.log('User:', user); 
-      const fetchMenusAndImage = async () => {
-        const menus = await viewModel.fetchAllMenus();
+      console.log('\t(HS) User:', user); 
+      console.log('\t(HS) Coordinates:', coords);
+
+      //Recupero i menu e le immagini
+
+      const fetchMenusAndImage = async (latitude, longitude) => {
+        const menus = await viewModel.fetchAllMenus(latitude, longitude);
   
         //Recupero immagini per ogni menu
         const updatedMenus = await Promise.all(
@@ -39,6 +52,15 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
         //const response = await ViewModelPosition.getAddressFromCoordinates(coordinates);
         //console.log('Address:', response);
       };
+
+      if (coords === "null") {
+        console.log('\t(HS)Coordinates are null');
+        setAddress("Milano");
+      } else {
+        console.log('\t(HS) Coordinates are not null:', coords.latitude, coords.longitude);
+        // chiamo funzione per convertire le coordinate in indirizzo
+        convertCoordinatesToAddress(coords);
+      }
       fetchMenusAndImage();
   }, []);
 
@@ -56,7 +78,7 @@ export default function HomeScreen({user, onChangeScreen, onMenuSelection}) {
           </View>
           <View style={styles.bodyContent}>
             
-            <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a Milano</Text>
+            <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a {address}</Text>
 
             {/* {<View style={{flexDirection: 'row', justifyContent: 'center'}}>
               <Image source={allMenus[0].image ? {uri: allMenus[0].image} : require('../../assets/images/ImageNotAvailable.jpg')} style={globalStyles.smallImage}/>

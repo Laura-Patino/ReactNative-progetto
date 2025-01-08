@@ -20,9 +20,17 @@ export default class ViewModelPosition {
     }
 
     static getCurrentLocation = async () => {
-        const location = await Location.getCurrentPositionAsync();
-        console.log('(3.1)', location);
+      try {
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+        //console.log('(3.1)', location);
         return location;
+      } catch (error) {
+        console.error('(3.1) Error getting current location:', error);
+        throw error;
+      }
+        
     }
 
     static async getAddressFromCoordinates(coordinates) {
@@ -30,8 +38,8 @@ export default class ViewModelPosition {
       console.log("----Conversione coordinate in indirizzo----")
       try {
         const address = await Location.reverseGeocodeAsync(coordinates);
-        console.log("Indirizzo obj:", address[0].formattedAddress);
-        return address[0].formattedAddress;
+        console.log("(VMP) Indirizzo obj:", address[0].formattedAddress);
+        return address[0].street; //formattedAddress;
       } catch (error) {
         console.error("Errore nella conversione delle coordinate in indirizzo:", error);
       }

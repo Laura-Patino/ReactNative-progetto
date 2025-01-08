@@ -71,7 +71,7 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen}) {
                         <Text style={globalStyles.textNormalBold}>Descrizione: </Text>{menuDetails.longDescription ? menuDetails.longDescription : "Lunga descrizione"}</Text>
 
                     <View style={globalStyles.divider}/>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
                         <Text style={globalStyles.textBigRegular}>Prezzo: {menuDetails.price} €</Text>
                         <Text style={globalStyles.textBigRegular}>Pronto in: {formattedTime(menuDetails.deliveryTime)}</Text>
                     </View>
