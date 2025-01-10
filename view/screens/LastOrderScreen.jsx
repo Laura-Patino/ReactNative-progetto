@@ -7,14 +7,18 @@ export default function LastOrderScreen({onChangeScreen}) {
 
     const viewModel = new ViewModel();
     const [order, setOrder] = useState(null);
+    //se order non null -> visualizzo l'ordine, mostro la mappa specifica in caso di "in consegna" o "consegnato"
+    //la pagina si deve agigornare ogni 5 secondi per vedere lo stato dell'ordine
 
     useEffect(() => {
         const fetchLastOrder = async () => {
+          console.log('----LastOrderScreen----');
+
           const lastOrder = await viewModel.getUserDetails();
           console.log('(LOS) Last order:', lastOrder);
 
-          if (lastOrder.lastOid && lastOrder.orderStatus) {
-            setOrder(lastOrder.lastOid); //cambiare a l'oggetto completo Order dal ViewModel
+          if (lastOrder.lastOid && lastOrder.orderStatus) { //se esiste un ordine 
+            setOrder(lastOrder.lastOid); //TODO: da modificare
           }
         };
 
@@ -25,7 +29,7 @@ export default function LastOrderScreen({onChangeScreen}) {
       return (
         <View style={{flex: 1}}>
           <View style={{ marginBottom: 10, marginHorizontal:15}}>
-              <Text style={globalStyles.headerTitle}>Ordine</Text>
+              <Text style={globalStyles.headerTitle}> Ultimo ordine</Text>
           </View>
           <View style={[styles.bodyContent, {justifyContent: 'center', alignItems: 'center'}]}>
             <Text style={styles.warningText}>Non hai ancora effettuato alcun ordine.</Text>

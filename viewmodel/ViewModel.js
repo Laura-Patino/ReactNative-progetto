@@ -178,18 +178,57 @@ export default class ViewModel {
         }
     }
 
+    async updateUserDetails(userData) {
+        try {
+            await CommunicationController.updateUserInfo(this.uid, userData)
+            return "Dati utente aggiornati con successo!";
+        } catch (error) {
+            console.error("Errore durante l'aggiornamento dei dati dell'utente:", error);
+            return "Errori nei dati inseriti. Controlla i campi e riprova.";
+        }
+    }
+
     async userIsRegistered() {
-        const fieldsUser =  await this.getUserDetails();
-        console.log("(VM) fieldsUser", fieldsUser); 
+        try {
+            const fieldsUser = await this.getUserDetails();
+            //return null se uno dei campi è null
+            return  (fieldsUser && fieldsUser.firstName && fieldsUser.lastName && fieldsUser.cardFullname && fieldsUser.cardNumber && fieldsUser.cardCVV && fieldsUser.cardExpireMonth && fieldsUser.cardExpireYear)
+        } catch (error) {
+            console.error("(userIsRegistered) Errore controllo dati utente:", error);
+        }
+        
     }
 
-    async updateUserDetails(bodyParams) {
-        //TODO
-    }
-
-    async buyMenu(mid) {
+    async buyMenu(mid, deliveryLocation) {
         //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
         //params: { sid, deliveryLocation}
+        const bodyParams = {
+            sid: this.sid,
+            lat: deliveryLocation.latitude,
+            lng: deliveryLocation.longitude
+        }
+
+        try {
+            const order = await CommunicationController.createOrder(mid, bodyParams);
+            return order;
+            
+        } catch (error) {
+            console.error("Errore durante l'acquisto del menu:", error);
+        }
+    }
+
+    async hasOrderInProgress() {
+        try {
+            const order = await this.getUserDetails();
+            console.log("(hasOrderInProgress) Order: oid=", order.lastOid, " status=", order.orderStatus);
+            if (order.lastOid && order.orderStatus == "ON_DELIVERY") {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error("(hasOrderInProgress) Errore:", error);
+        }
     }
 
     async getOrderDetails(oid) {

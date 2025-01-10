@@ -11,6 +11,7 @@ import HomeScreen from './view/screens/HomeScreen';
 import OrderScreen from './view/screens/LastOrderScreen';
 import ProfileScreen from './view/screens/ProfileScreen';
 import MenuDetailsScreen from './view/screens/MenuDetailsScreen';
+import UpdateProfileScreen from './view/screens/UpdateProfileScreen';
 
 //COMPONENTS
 import TabNavigation from './view/components/TabNavigation';
@@ -20,7 +21,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useState } from 'react';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+
+// aggiornare npm etc: npm install expo@~52.0.7 oppure npm install react-native@0.76.2 -> npx expo install
 
 export default function App() {
   
@@ -33,11 +35,15 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [sessionUser, setSessionUser] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState(null);
+
   const [coordinates, setCoordinates] = useState(null);
+  const [permissionPosition, setPermissionPosition] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
     console.log('Screen changed to: ', screen);
+    
   }
 
   const handleMenuSelection = (menu) => {
@@ -46,23 +52,26 @@ export default function App() {
 
   const getCoordinates = async () => {
     try {
-      let canUseLocation = await ViewModelPosition.askPermission();
+      const canUseLocation = await ViewModelPosition.askPermission();
+      setPermissionPosition(canUseLocation);
+
       if (canUseLocation) {
+        
         console.log('(3.1) Can use location');
         
-        ViewModelPosition.getCurrentLocation().then((location) => {
-          console.log('\t...(3.1.1) Coordinates: lat=', location.coords.latitude, "lon=", location.coords.longitude);
+        const location = await ViewModelPosition.getCurrentLocation();
+        console.log('\t...(3.1.1) Coordinates: lat=', location.coords.latitude, "lon=", location.coords.longitude);
 
-          setCoordinates({
-            latitude: location.coords.latitude, 
-            longitude: location.coords.longitude
-          });
+        setCoordinates({
+          latitude: location.coords.latitude, 
+          longitude: location.coords.longitude
         });
-        
       } else {
         console.log('(3.1) Cannot use location');
-        setCoordinates(null);
-        Alert.alert('Lettura posizione non autorizzata', 'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
+        
+        Alert.alert(
+          'Lettura posizione non autorizzata', 
+          'Per il momento verrano visualizzati i ristoranti vicini a Milano', [
           {
             text: 'OK',
             onPress: () => console.log('OK Pressed')
@@ -81,12 +90,13 @@ export default function App() {
       setSessionUser(sessione);
 
       if (sessione && !sessione.firstRun) {
+        console.log('Not first run....');
         await getCoordinates();
-      } else if (sessione && sessione.firstRun) {
-        setCoordinates(null);
-      }
+      } 
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -96,41 +106,31 @@ export default function App() {
       if (!sessionUser) {
         console.log('(1) SessionUser is null');
         await init();
-        
       }
-      // if (sessionUser) {
-      //   console.log('(2) SessionUser is not null:', sessionUser);
-      //   // Solo al secondo avvio chiedo i permessi per la posizione
-      //   if (!sessionUser.firstRun) {
-      //     console.log('(3) Asking for location permission...');
-      //     await getCoordinates();
-      //   }
-      //   //TODO: firstRun true -> posizione di default
-      //   //    firstRun false -> chiedere permessi e recuperare posizione 
-      // }
       
     };
 
     initializeApp();
   }, []); //sessionUser
 
-  if (!fontsLoaded || !sessionUser) {
+  if (isLoading || !fontsLoaded) { //|| !sessionUser || permissionPosition === null) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
-          <Text style={globalStyles.logo}>Mangia e Basta .</Text>
+          <Text style={globalStyles.logo}>Mangia e Basta </Text>
           <ActivityIndicator size='large' color='yellow'/>
         </View>
       </SafeAreaView> 
     );
   } 
 
-  if (sessionUser && !sessionUser.firstRun && !coordinates) {
+  if (permissionPosition && !coordinates && sessionUser && !sessionUser.firstRun) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
           <Text style={globalStyles.logo}>Mangia e Basta</Text>
-          <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento coordinate...</Text>
+          <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento posizione...</Text>
+    
           <ActivityIndicator size='large' color='yellow'/>
         </View>
       </SafeAreaView> 
@@ -154,7 +154,12 @@ export default function App() {
       }
       {
         currentScreen === "Profilo" && (
-          <ProfileScreen />
+          <ProfileScreen onChangeScreen={changeScreen} />
+        )
+      }
+      { 
+        currentScreen === "UpdateProfilo" && (
+          <UpdateProfileScreen onChangeScreen={changeScreen} />
         )
       }
        

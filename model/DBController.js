@@ -23,7 +23,7 @@ export default class DBController {
     async insertMenuImage(mid, imageVersion, image) {
         const query = "INSERT INTO MenuImage(mid, imageVersion, image) VALUES (?, ?, ?);";
         try {
-            const res = await this.db.runAsync(query, mid, imageVersion, image); //runAsync usata per inserire dati
+            const res = await this.db.runAsync(query, [mid, imageVersion, image]); //runAsync usata per inserire dati
             //console.log("DBController.insertMenuImage() ", res.lastInsertRowId, res.changes);
         } catch (error) {
             console.error("DBController.insertMenuImage Errore inserimento menu: ", error);
@@ -34,7 +34,7 @@ export default class DBController {
     async getMenuByMid(mid) {
         const query = "SELECT * FROM MenuImage WHERE mid = ?;";
         try {
-            const result = await this.db.getFirstAsync(query, mid);
+            const result = await this.db.getFirstAsync(query, [mid]);
             return result;
         } catch (error) {
             console.error("Errore recupero menu: ", error);
@@ -45,10 +45,10 @@ export default class DBController {
     async getImageMenu(mid, imageVersion) {
         const query = "SELECT image FROM MenuImage WHERE mid = ? AND imageVersion = ?;";
         try {
-            const result = await this.db.getFirstAsync(query, mid, imageVersion);
+            const result = await this.db.getFirstAsync(query, [mid, imageVersion]);
             return result;
         } catch (error) {
-            console.error("Errore recupero versione immagine: ", error);
+            console.error("(DBController.getImageMenu) Errore recupero versione immagine: ", error);
         }
     }
 
@@ -56,7 +56,7 @@ export default class DBController {
     async updateMenuImage(mid, newImageVersion, newimage) {
         const query = "UPDATE MenuImage SET image = ?, imageVersion = ? WHERE mid = ?;";
         try {
-            const result = await this.db.runAsync(query, newimage, newImageVersion, mid);
+            const result = await this.db.runAsync(query, [newimage, newImageVersion, mid]);
             //console.log(result.lastInsertRowId, result.changes);
         } catch (error) {
             console.error("Errore aggiornamento immagine: ", error);

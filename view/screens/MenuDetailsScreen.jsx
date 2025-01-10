@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, Pressable, Button, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import ViewModel from '../../viewmodel/ViewModel';
+import ViewModelPosition from '../../viewmodel/viewModelPosition';
 
 //ICONS
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -10,10 +11,10 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 const viewModel = new ViewModel();
 
 export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coords}) {
-    const [user, setUser] = useState(null);
     const [menuDetails, setMenuDetails] = useState(null);
     
-    const [canDoOrder, setCanDoOrder] = useState(false); //TODO: DA MODIFICARE
+    const [canDoOrder, setCanDoOrder] = useState(false);
+    const [missingAllowances, setMissingAllowances] = useState(null);
 
     const getMenuDetails = async (latitude, longitude) => {
         try {
@@ -21,6 +22,26 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
             setMenuDetails(menuResponse);
         } catch (error) {
             console.error('(MDS) Errore durante il recupero dei dettagli del menu:', error);
+        }
+    };
+
+    const orderAllowed = async () => {
+        console.log('Check if order is allowed...');
+        
+        const permissionGranted = await ViewModelPosition.askPermission();
+        const profileCompleted = await viewModel.userIsRegistered();
+        const hasOrderInProgress = await viewModel.hasOrderInProgress();
+        console.log('(MDS) Permission position:', permissionGranted, ' Profile:', profileCompleted, ' Order:', hasOrderInProgress);
+
+        if (permissionGranted && profileCompleted && !hasOrderInProgress) {
+            setCanDoOrder(true);
+        } else {
+            setCanDoOrder(false);
+            let missing = [];
+            if (!permissionGranted) missing.push('Negato l\'accesso alla tua posizione');
+            if (!profileCompleted) missing.push('Non hai ancora completato il profilo');
+            if (hasOrderInProgress) missing.push('Hai ancora un ordine in corso, attendi la consegna');
+            setMissingAllowances(missing);
         }
     };
 
@@ -37,16 +58,16 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
 
     useEffect(() => {
         console.log('----MenuDetailsScreen useEffect----');
-        const sessione = viewModel.getSessionUser();
-        setUser(sessione);
-        console.log('\tUser:', sessione.sid); 
+         
         console.log('\tMenu:', selectedMenuMid);
 
         if (coords == null) getMenuDetails();
         else getMenuDetails(coords.latitude, coords.longitude);
+
+        orderAllowed();
     }, []);
 
-    if (user == null || menuDetails == null) {
+    if (menuDetails == null) {
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size="large" color="yellow" />
@@ -56,13 +77,14 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
 
     return (
         <View style={{flex: 1}}>
-            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            
                 <View style={{ marginBottom: 10, marginHorizontal:15}}>
                     <Text style={globalStyles.headerTitle}>Dettagli menu</Text>
                     <Pressable style={{position: 'absolute', top: 0, left: 5}} onPress={() => onChangeScreen('Home')}>
                         <FontAwesome name="arrow-circle-left" size={40} color="white" />
                     </Pressable>
                 </View>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View style={styles.bodyContent}>
                     <Text style={[globalStyles.textBigBold, {paddingBottom: 5, textAlign:'center'}]}>{menuDetails.name ? menuDetails.name : "Nessun menu selezionato"}</Text>
                     <View style={styles.imageContainer}>
@@ -85,9 +107,13 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
                     </View>
                     {/* {<Text style={globalStyles.textNormalRegular}>Benvenuto{', ' + user?.uid + ', firstRun:' + user?.firstRun}</Text>} */}
                     <View style={globalStyles.divider}/>
-                    <Button title="Ordina" color={'brown'} disabled={!canDoOrder} onPress={() => console.log('pressed')}/>
-                    {!canDoOrder && <Text style={styles.warningText}>Non è ancora possibile ordinare un menu</Text>}
-                    
+                    <Button title="Ordina" color={'brown'} disabled={!canDoOrder} onPress={() => console.log('Do order')}/>
+                    <View style={{alignItems: 'center'}}>
+                        {!canDoOrder && <Text style={styles.warningText}>Non è ancora possibile ordinare un menu:</Text>}
+                        {missingAllowances && missingAllowances.map((item, index) => (
+                            <Text key={index} style={styles.warningText}>{(index+1)}. {item}</Text>
+                        ))}
+                    </View>
                 </View>
             </ScrollView>
         </View>
@@ -107,7 +133,7 @@ const styles = StyleSheet.create({
     warningText: {
         ...globalStyles.textSmallBold,
         color: 'brown',
-        textAlign: 'center'
+        //textAlign: 'center'
     },
     bigImage: {
         width: '100%', 
