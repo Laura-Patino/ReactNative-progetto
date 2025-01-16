@@ -56,9 +56,10 @@ export default class CommunicationController {
         return await this.genericRequest(endpoint, 'GET', queryParams, {});
     }
 
-    static async updateUserInfo(uid, bodyParams) {
-        //TODO: gestire bodyParams, oggetto già struttrato con i dati da inviare?
+    static async updateUserInfo(uid, sid, userData) {
         let endpoint = "/user/" + uid;
+        userData.sid = sid;
+        let bodyParams = userData;
         return await this.genericRequest(endpoint, 'PUT', {}, bodyParams);
     }
 

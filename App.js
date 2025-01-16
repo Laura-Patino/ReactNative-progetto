@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { globalStyles, fonts } from './styles/global';
 import { useFonts } from 'expo-font';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useState } from 'react';
 
-// aggiornare npm etc: npm install expo@~52.0.7 oppure npm install react-native@0.76.2 -> npx expo install
+// aggiornare npm etc: npm install expo@~52.0.7 oppure npm install react-native@0.76.6 -> npx expo install
 
 export default function App() {
   
@@ -35,6 +35,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [sessionUser, setSessionUser] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   const [coordinates, setCoordinates] = useState(null);
   const [permissionPosition, setPermissionPosition] = useState(false);
@@ -44,6 +45,10 @@ export default function App() {
     setCurrentScreen(screen);
     console.log('Screen changed to: ', screen);
     
+  }
+
+  const handleUserUpdating = (user) => {
+    setUserData(user);
   }
 
   const handleMenuSelection = (menu) => {
@@ -124,7 +129,7 @@ export default function App() {
     );
   } 
 
-  if (permissionPosition && !coordinates && sessionUser && !sessionUser.firstRun) {
+  if (sessionUser && !sessionUser.firstRun && permissionPosition && !coordinates) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
@@ -154,15 +159,16 @@ export default function App() {
       }
       {
         currentScreen === "Profilo" && (
-          <ProfileScreen onChangeScreen={changeScreen} />
+          <ProfileScreen onChangeScreen={changeScreen} onUserUpdating={handleUserUpdating}/>
         )
       }
       { 
         currentScreen === "UpdateProfilo" && (
-          <UpdateProfileScreen onChangeScreen={changeScreen} />
+          <UpdateProfileScreen onChangeScreen={changeScreen} userData={userData}/>
         )
       }
-       
+      
+      { currentScreen !== "UpdateProfilo" &&
       <View style={styles.navStyle}>
         <TabNavigation onChangeScreen={changeScreen} currentScreen={currentScreen} name="Home">
           {currentScreen === 'Home' ? 
@@ -180,6 +186,7 @@ export default function App() {
           }   
         </TabNavigation>
       </View>
+      }
       <StatusBar style="auto" backgroundColor='#327432'/>
     </SafeAreaView>
   );
@@ -187,7 +194,7 @@ export default function App() {
 
 const styles = StyleSheet.create({ 
   navStyle: {
-    position: 'relative', 
+    position: 'absolute', 
     bottom: 0, 
     backgroundColor: '#327432', 
     //borderTopColor: 'white',

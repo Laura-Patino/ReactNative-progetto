@@ -18,8 +18,14 @@ export const globalStyles = StyleSheet.create({
         borderColor: '#cfccc4', 
         borderTopWidth: 2, 
         marginHorizontal: 0, 
-        marginVertical: 15
+        marginVertical: 10
     }, 
+    maxDivider: {
+        borderColor: '#cfccc4', 
+        borderTopWidth: 3, 
+        marginHorizontal: 5, 
+        marginVertical: 20
+    },
     smallImage: {
         width: 120, 
         height: 120, 
@@ -54,7 +60,7 @@ export const globalStyles = StyleSheet.create({
     },
     textBigRegular: {
         fontFamily: fonts.regular,
-        fontSize: 20,
+        fontSize: 19,
         letterSpacing: 0.3,
     },
     textBigBold: {

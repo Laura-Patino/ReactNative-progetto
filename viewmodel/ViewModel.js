@@ -171,8 +171,9 @@ export default class ViewModel {
       
     async getUserDetails() {
         try {
-            const userInfo = await CommunicationController.getUserInfo(this.uid, this.sid);
-            return userInfo;
+            const fieldsUser = await CommunicationController.getUserInfo(this.uid, this.sid);
+            return fieldsUser;
+            
         } catch (error) {
             console.error("Errore nel recupero delle informazioni dell'utente:", error);
         }
@@ -180,7 +181,8 @@ export default class ViewModel {
 
     async updateUserDetails(userData) {
         try {
-            await CommunicationController.updateUserInfo(this.uid, userData)
+            await CommunicationController.updateUserInfo(this.uid, this.sid, userData);
+            await StorageManager.setItemByKey("isRegister", true);
             return "Dati utente aggiornati con successo!";
         } catch (error) {
             console.error("Errore durante l'aggiornamento dei dati dell'utente:", error);
@@ -190,9 +192,11 @@ export default class ViewModel {
 
     async userIsRegistered() {
         try {
-            const fieldsUser = await this.getUserDetails();
-            //return null se uno dei campi è null
-            return  (fieldsUser && fieldsUser.firstName && fieldsUser.lastName && fieldsUser.cardFullname && fieldsUser.cardNumber && fieldsUser.cardCVV && fieldsUser.cardExpireMonth && fieldsUser.cardExpireYear)
+            return await StorageManager.getItemByKey("isRegister");
+
+        //     const fieldsUser = await this.getUserDetails();
+        //     //return null se uno dei campi è null
+        //     return (fieldsUser && fieldsUser.firstName && fieldsUser.lastName && fieldsUser.cardFullname && fieldsUser.cardNumber && fieldsUser.cardCVV && fieldsUser.cardExpireMonth && fieldsUser.cardExpireYear);
         } catch (error) {
             console.error("(userIsRegistered) Errore controllo dati utente:", error);
         }

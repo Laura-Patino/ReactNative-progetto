@@ -17,7 +17,7 @@ export default function LastOrderScreen({onChangeScreen}) {
           const lastOrder = await viewModel.getUserDetails();
           console.log('(LOS) Last order:', lastOrder);
 
-          if (lastOrder.lastOid && lastOrder.orderStatus) { //se esiste un ordine 
+          if (lastOrder && lastOrder.lastOid && lastOrder.orderStatus) { //se esiste un ordine 
             setOrder(lastOrder.lastOid); //TODO: da modificare
           }
         };
