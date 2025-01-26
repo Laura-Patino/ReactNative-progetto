@@ -20,6 +20,13 @@ export const globalStyles = StyleSheet.create({
         marginHorizontal: 0, 
         marginVertical: 10
     }, 
+    underline: {
+        borderColor: 'brown',
+        borderBottomWidth: 3,
+    },
+    spaceArea: {
+        marginVertical: 10,
+    },
     maxDivider: {
         borderColor: '#cfccc4', 
         borderTopWidth: 3, 

@@ -22,7 +22,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useState } from 'react';
 
-// aggiornare npm etc: npm install expo@~52.0.7 oppure npm install react-native@0.76.6 -> npx expo install
+//imports extra: npx expo install expo-linear-gradient
+// aggiornare npm etc: npm install expo@~52.0.26 oppure npm install react-native@0.76.6 -> npx expo install
 
 export default function App() {
   
@@ -194,7 +195,7 @@ export default function App() {
 
 const styles = StyleSheet.create({ 
   navStyle: {
-    position: 'absolute', 
+    position: 'relative', 
     bottom: 0, 
     backgroundColor: '#327432', 
     //borderTopColor: 'white',

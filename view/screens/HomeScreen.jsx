@@ -20,11 +20,6 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
     setAddress(res);
   }
 
-  // {const fetchUserDetails = async () => {
-  //   const userDetails = await viewModel.getUserDetails();
-  //   console.log('(HS) User details:', userDetails);
-  // };}
-
   useEffect(() => {
       console.log('----HomeScreen useEffect----');
 

@@ -84,6 +84,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
             <ScrollView contentContainerStyle={{flexGrow: 1}}>            
                 <View style={styles.bodyContent}>
                     <Text style={[globalStyles.textBigBold]}>Informazioni personali</Text>
+                    <View style={globalStyles.underline}></View>
                     
                     <Text style={styles.inputLabel}>Nome</Text>
                     {errors.firstName && <Text style={styles.warningText}>{errors.firstName}</Text>}
@@ -102,8 +103,9 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                         style={[styles.input, errors.lastName && styles.inputErrorColor]}
                     ></TextInput>
 
-                    <View style={globalStyles.maxDivider}></View>
+                    <View style={globalStyles.spaceArea}></View>
                     <Text style={globalStyles.textBigBold}>Dati carta di credito</Text>
+                    <View style={globalStyles.underline}></View>
                 
                     <Text style={styles.inputLabel}>Nome completo sulla carta</Text>
                     {errors.cardFullName && <Text style={styles.warningText}>{errors.cardFullName}</Text>}
@@ -129,13 +131,14 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                     <View flexDirection='row' >
                         <View flexDirection="row" style={{borderWidth:1, borderColor: '#ccc', width: 120, justifyContent:'center', borderRadius: 4}}>
                             <TextInput 
-                                onChangeText={(input) => setUserFields({...userFields, cardExpireMonth: parseInt(input)})}  
+                                onChangeText={ (input) => setUserFields({...userFields, cardExpireMonth: parseInt(input)}) }  
+                                returnKeyType='next'
                                 maxLength={2} 
                                 inputMode='numeric'
                                 keyboardType='numeric-pad'
                                 placeholder={"MM"}
                                 style={[globalStyles.textBigRegular, errors.cardExpireMonth && styles.inputErrorColor]}
-                            >{userData.cardExpireMonth}</TextInput>
+                            >{userData.cardExpireMonth.toString().padStart(2, '0')}</TextInput>
                             <Text style={{textAlignVertical: 'center'}}>/</Text>
                             <TextInput 
                                 onChangeText={(input) => setUserFields({...userFields, cardExpireYear: parseInt(input)})}  
@@ -158,8 +161,8 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                         style={[styles.input, errors.cardCVV && styles.inputErrorColor]}
                     ></TextInput>
                     
-                    <View style={globalStyles.divider}></View>
-                    <Button title={'Conferma dati'} color={'green'} onPress={() => handleSubmitForm()} />
+                    <View style={globalStyles.spaceArea}></View>
+                    <Button title={'Conferma modifiche'} color={'green'} onPress={() => handleSubmitForm()} />
                 </View>
             </ScrollView>
         </View>
