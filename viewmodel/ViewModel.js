@@ -238,6 +238,11 @@ export default class ViewModel {
 
     async getOrderDetails(oid) {
         //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
-
+        try {
+            const order = await CommunicationController.getOrderInfo(oid, this.sid);
+            return order;
+        } catch (error) {
+            console.error("Errore durante il recupero dei dettagli dell'ordine:", error);
+        }
     }
 }

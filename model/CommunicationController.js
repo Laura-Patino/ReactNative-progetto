@@ -64,7 +64,7 @@ export default class CommunicationController {
     }
 
     // ORDER
-    static async getOrderStatus(oid, sid) {
+    static async getOrderInfo(oid, sid) {
         let endpoint = "/order/" + oid;
         let queryParams = {
             sid: sid

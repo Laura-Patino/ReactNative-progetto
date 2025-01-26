@@ -26,7 +26,7 @@ export default function LastOrderScreen({onChangeScreen}) {
 
     useEffect(() => {
         const fetchLastOrder = async () => {
-          console.log('----LastOrderScreen----');
+          console.log('------LastOrderScreen------');
           
           const userDetails = await viewModel.getUserDetails();
           console.log('(LOS) User last order:', userDetails);

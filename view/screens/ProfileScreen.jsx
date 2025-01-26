@@ -14,6 +14,9 @@ const avatar = require('../../assets/images/userAvatarDefault.jpg');
 export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
     const viewModel = new ViewModel();
     const [userDetails, setUserDetails] = useState(null);
+    const [lastOrderDetails, setLastOrderDetails] = useState(null);
+    const [menuInfo, setMenuInfo] = useState(null);
+
     const [isLoading, setIsLoading] = useState(true);
 
     const updateUserInfo = async () => {
@@ -37,18 +40,29 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
       if (isRegistered) {
         const user = await viewModel.getUserDetails();
         setUserDetails(user);
+
+        if (user.lastOid) {
+          const lastOrderData = await viewModel.getOrderDetails(user.lastOid); //per ottenere il mid
+          console.log('(Profile) Ultimo ordine dati:', lastOrderData);
+          setLastOrderDetails(lastOrderData);
+
+          const menuData = await viewModel.fetchMenuDetails(lastOrderData.mid);
+          setMenuInfo(menuData);
+        }
       }
+      setIsLoading(false);
     }
+
 
     useEffect(() => {
         console.log('----Profile useEffect----');
         try {
-          fetchUserDetails(); 
+          fetchUserDetails();
         } catch (error) {
           console.error('(Profile) Errore durante fetch dei dettagli utente:', error);
-        } finally {
-          setIsLoading(false);
-        }
+        } //finally {
+        //   setIsLoading(false);
+        // }
     }, []);
 
     if (isLoading) {
@@ -100,7 +114,7 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
                 style={{borderRadius: 10, marginVertical: 5, padding: 25}}
               > 
                 <View style={styles.rowElements}>
-                  <Text style={globalStyles.textBigBold}>{userDetails.cardNumber.slice(-4).padStart(userDetails.cardNumber.length, '*')}</Text>
+                  <Text style={globalStyles.textBigBold}>{'**** **** **** ' + userDetails.cardNumber.slice(-4)}</Text>
                   <FontAwesome name="cc-mastercard" size={30} color="black" />
                 </View>
                 <View style={globalStyles.spaceArea}></View>
@@ -117,8 +131,13 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
                 <Text style={globalStyles.textNormalBold}> Ultimo ordine</Text>
               </View>
               <View style={globalStyles.underline}></View>
-              {userDetails.lastOid ? (
-                <View >
+              {userDetails.lastOid && lastOrderDetails && menuInfo ? (
+                <View style={{flexDirection: 'column', flexWrap: 'wrap'}}>
+                  <Image source={{uri: menuInfo.image}} style={[globalStyles.smallImage, {alignSelf: 'center'}]}>
+                  </Image>
+                  <Text style={globalStyles.textNormalRegular}>menu mid ...{lastOrderDetails.mid}</Text>
+                  <Text style={globalStyles.textNormalRegular}>nome menu ...{menuInfo.name}</Text>
+                  <Text style={globalStyles.textNormalRegular}>ora consegna ...{lastOrderDetails.quantity}</Text>
                   <Text style={globalStyles.textNormalRegular}>ultimo ordine ...{userDetails.lastOid}</Text>
                   <Text style={globalStyles.textNormalRegular}>STATUS ...{userDetails.orderStatus}</Text>
 
