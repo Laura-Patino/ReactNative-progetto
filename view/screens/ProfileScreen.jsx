@@ -53,6 +53,25 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
       setIsLoading(false);
     }
 
+    const getDateDeliveryFormatted = (isoString) => {
+      const date = new Date(isoString);
+      const giornoConsegna = date.toLocaleDateString("it-IT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      return giornoConsegna;
+    }
+
+    const getTimeDeliveryFormatted = (isoString) => {  
+      const date = new Date(isoString);
+      const oraConsegna = date.toLocaleTimeString("it-IT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return oraConsegna;
+    }
+
 
     useEffect(() => {
         console.log('----Profile useEffect----');
@@ -126,21 +145,23 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
               </LinearGradient>
               
               <View style={globalStyles.spaceArea}></View>
+
               <View style={{flexDirection: 'row', alignItems: 'center'}} >
                 <MaterialCommunityIcons name="shopping-outline" size={22} color="black" />
                 <Text style={globalStyles.textNormalBold}> Ultimo ordine</Text>
               </View>
               <View style={globalStyles.underline}></View>
               {userDetails.lastOid && lastOrderDetails && menuInfo ? (
-                <View style={{flexDirection: 'column', flexWrap: 'wrap'}}>
-                  <Image source={{uri: menuInfo.image}} style={[globalStyles.smallImage, {alignSelf: 'center'}]}>
-                  </Image>
-                  <Text style={globalStyles.textNormalRegular}>menu mid ...{lastOrderDetails.mid}</Text>
-                  <Text style={globalStyles.textNormalRegular}>nome menu ...{menuInfo.name}</Text>
-                  <Text style={globalStyles.textNormalRegular}>ora consegna ...{lastOrderDetails.quantity}</Text>
-                  <Text style={globalStyles.textNormalRegular}>ultimo ordine ...{userDetails.lastOid}</Text>
-                  <Text style={globalStyles.textNormalRegular}>STATUS ...{userDetails.orderStatus}</Text>
-
+                <View style={{flexDirection: 'row', marginVertical: 7, borderWidth: 2, borderColor: 'lightgrey', borderRadius: 10}}>
+                  <Image source={{uri: menuInfo.image}} style={[globalStyles.smallImage, {borderBottomLeftRadius: 10, borderTopLeftRadius: 10}]} />
+                  <View style={{padding: 5, justifyContent: 'center'}}>
+                    <Text style={globalStyles.textNormalBold}>{menuInfo.name} 
+                    <Text style={[globalStyles.textSmallRegular, {color: 'grey'}]}> ID:{lastOrderDetails.mid}</Text></Text>
+                    <Text style={[globalStyles.textSmallRegular, {color: 'grey'}]}>Ordine #{userDetails.lastOid}</Text>
+                    <Text style={globalStyles.textNormalRegular}>Status: <Text style={globalStyles.textNormalBold}>{userDetails.orderStatus === 'COMPLETED' ? 'Consegnato' : 'In consegna'}</Text></Text>
+                    <Text style={globalStyles.textNormalRegular}>Data consegna: {userDetails.orderStatus === "COMPLETED" ? getDateDeliveryFormatted(lastOrderDetails.deliveryTimestamp) : getDateDeliveryFormatted(lastOrderDetails.expectedDeliveryTimestamp)}</Text>
+                    <Text style={globalStyles.textNormalRegular}>Ora consegna: {userDetails.orderStatus === "COMPLETED" ? getTimeDeliveryFormatted(lastOrderDetails.deliveryTimestamp) : getTimeDeliveryFormatted(lastOrderDetails.expectedDeliveryTimestamp)}</Text>
+                  </View>
                 </View>
               ) : (
                 <Text style={globalStyles.textNormalRegular}>Ancora nessun ordine effettuato</Text>
