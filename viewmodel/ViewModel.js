@@ -203,19 +203,20 @@ export default class ViewModel {
         
     }
 
-    async buyMenu(mid, deliveryLocation) {
+    async buyMenu(mid, latitude, longitude) {
         //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
         //params: { sid, deliveryLocation}
         const bodyParams = {
             sid: this.sid,
-            lat: deliveryLocation.latitude,
-            lng: deliveryLocation.longitude
+            deliveryLocation: {
+                lat: latitude,
+                lng: longitude,
+            }
         }
 
         try {
             const order = await CommunicationController.createOrder(mid, bodyParams);
             return order;
-            
         } catch (error) {
             console.error("Errore durante l'acquisto del menu:", error);
         }

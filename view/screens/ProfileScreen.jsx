@@ -118,7 +118,11 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
               </View>
               <View style={globalStyles.underline}></View>
               {userDetails.lastOid ? (
-                <View >ultimo ordine ...</View>
+                <View >
+                  <Text style={globalStyles.textNormalRegular}>ultimo ordine ...{userDetails.lastOid}</Text>
+                  <Text style={globalStyles.textNormalRegular}>STATUS ...{userDetails.orderStatus}</Text>
+
+                </View>
               ) : (
                 <Text style={globalStyles.textNormalRegular}>Ancora nessun ordine effettuato</Text>
               )}

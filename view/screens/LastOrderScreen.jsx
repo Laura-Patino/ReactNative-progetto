@@ -1,28 +1,47 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { globalStyles } from '../../styles/global';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ViewModel from '../../viewmodel/ViewModel';
 
 export default function LastOrderScreen({onChangeScreen}) {
 
     const viewModel = new ViewModel();
     const [order, setOrder] = useState(null);
+
+    let interval;
     //se order non null -> visualizzo l'ordine, mostro la mappa specifica in caso di "in consegna" o "consegnato"
-    //la pagina si deve agigornare ogni 5 secondi per vedere lo stato dell'ordine
+    //la pagina si deve aggiornare ogni 5 secondi per vedere lo stato dell'ordine
+
+    const onLoad = () => {
+      console.log("Componente montato");
+      interval = setInterval(() => {
+        console.log("\tAggiornamento stato ordine... TODO: da implementare");
+      }, 5000);
+    }
+
+    const onUnload = () => {
+      console.log("Componente smontato");
+      clearInterval(interval);
+    }
 
     useEffect(() => {
         const fetchLastOrder = async () => {
           console.log('----LastOrderScreen----');
-
+          
           const userDetails = await viewModel.getUserDetails();
-          console.log('(LOS) Last order:', userDetails);
+          console.log('(LOS) User last order:', userDetails);
 
           if (userDetails && userDetails.lastOid && userDetails.orderStatus) { //se esiste un ordine 
+            console.log('(LOS) Last order:', userDetails.lastOid, ' Status:', userDetails.orderStatus);
+            if (userDetails.orderStatus === 'ON_DELIVERY') 
+              onLoad();
             setOrder(userDetails.lastOid); //TODO: da modificare
           }
         };
 
         fetchLastOrder();
+
+        return onUnload;
     }, []);
 
     if (order == null) {
@@ -49,8 +68,7 @@ export default function LastOrderScreen({onChangeScreen}) {
               <Text style={globalStyles.headerTitle}>Ordine</Text>
           </View>
           <View style={styles.bodyContent}>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Text style={globalStyles.textNormalBold}>Ordine</Text>
+            <Text style={globalStyles.textNormalBold}>Ordine {order}</Text>
           </View>
         </View>
     )

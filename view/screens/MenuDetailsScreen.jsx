@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Pressable, Button, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, Pressable, Button, ActivityIndicator, StyleSheet, ScrollView, Alert } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import ViewModel from '../../viewmodel/ViewModel';
 import ViewModelPosition from '../../viewmodel/viewModelPosition';
@@ -25,13 +25,26 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
         }
     };
 
+    const buyMenu = async () => {
+        try {
+            const orderResponse = await viewModel.buyMenu(selectedMenuMid, coords.latitude, coords.longitude);
+            console.log('(MDS) Order response:', orderResponse);
+            if (orderResponse)
+                onChangeScreen('Ordine');
+            else 
+                Alert.alert('Errore', 'Errore durante l\'acquisto del menu. Riprova più tardi.');
+        } catch (error) {
+            console.error("(MDS) Errore durante l\'acquisto del menu:", error);
+        }
+    }
+
     const orderAllowed = async () => {
         console.log('Check if order is allowed...');
         
         const permissionGranted = await ViewModelPosition.askPermission();
         const profileCompleted = await viewModel.userIsRegistered();
         const hasOrderInProgress = await viewModel.hasOrderInProgress();
-        console.log('(MDS) Permission position:', permissionGranted, ' Profile:', profileCompleted, ' Order:', hasOrderInProgress);
+        console.log('(MDS) Permission position:', permissionGranted, ' Profile:', profileCompleted, ' OrderInProgress:', hasOrderInProgress);
 
         if (permissionGranted && profileCompleted && !hasOrderInProgress) {
             setCanDoOrder(true);
@@ -61,7 +74,7 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
          
         console.log('\tMenu:', selectedMenuMid);
 
-        if (coords == null) getMenuDetails();
+        if (coords == null) getMenuDetails();  //TODO: forse modifica, chiedere la posizione al click di un dettaglio menu
         else getMenuDetails(coords.latitude, coords.longitude);
 
         orderAllowed();
@@ -105,9 +118,9 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
                         <Text style={globalStyles.textBigRegular}>Prezzo: {menuDetails.price} €</Text>
                         <Text style={globalStyles.textBigRegular}>Pronto in: {formattedTime(menuDetails.deliveryTime)}</Text>
                     </View>
-                    {/* {<Text style={globalStyles.textNormalRegular}>Benvenuto{', ' + user?.uid + ', firstRun:' + user?.firstRun}</Text>} */}
+                    
                     <View style={globalStyles.divider}/>
-                    <Button title="Ordina" color={'brown'} disabled={!canDoOrder} onPress={() => console.log('Do order')}/>
+                    <Button title="Ordina" color={'brown'} disabled={!canDoOrder} onPress={() => buyMenu()}/>
                     <View style={{alignItems: 'center'}}>
                         {!canDoOrder && <Text style={styles.warningText}>Non è ancora possibile ordinare un menu:</Text>}
                         {missingAllowances && missingAllowances.map((item, index) => (
