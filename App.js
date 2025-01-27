@@ -45,7 +45,6 @@ export default function App() {
   const changeScreen = (screen) => {
     setCurrentScreen(screen);
     console.log('Screen changed to: ', screen);
-    
   }
 
   const handleUserUpdating = (user) => {
@@ -110,7 +109,6 @@ export default function App() {
     console.log('----App useEffect----');
     const initializeApp = async () => {
       if (!sessionUser) {
-        console.log('(1) SessionUser is null');
         await init();
       }
       

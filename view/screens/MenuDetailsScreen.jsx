@@ -26,16 +26,16 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
     };
 
     const buyMenu = async () => {
-        try {
+        //try {
             const orderResponse = await viewModel.buyMenu(selectedMenuMid, coords.latitude, coords.longitude);
             console.log('(MDS) Order response:', orderResponse);
             if (orderResponse)
                 onChangeScreen('Ordine');
             else 
-                Alert.alert('Errore', 'Errore durante l\'acquisto del menu. Riprova più tardi.');
-        } catch (error) {
-            console.error("(MDS) Errore durante l\'acquisto del menu:", error);
-        }
+                Alert.alert('Carta di credito non valida', 'La carta di credito inserita non è valida. Inserirne una valida sul profilo.');
+        // } catch (error) {
+        //     console.error("(MDS) Errore durante l\'acquisto del menu:", error);
+        // }
     }
 
     const orderAllowed = async () => {

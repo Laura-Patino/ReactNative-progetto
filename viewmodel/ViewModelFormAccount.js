@@ -13,7 +13,7 @@ export default class ViewModelFormAccount {
     }
 
     static validateCardNumber(cardNumber) {
-        console.log("(VMFA) Card number:", cardNumber, "res:", !isNaN(Number(cardNumber)));
+        //console.log("(VMFA) Card number:", cardNumber, "res:", !isNaN(Number(cardNumber)));
         return cardNumber && cardNumber.length === 16 && !isNaN(Number(cardNumber));
     }
 

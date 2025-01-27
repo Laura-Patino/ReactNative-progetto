@@ -2,10 +2,10 @@ export default class CommunicationController {
     static BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 
     static async genericRequest(endpoint, verb, queryParams, bodyParams) {
-        console.log("( CC )-------genetic Request called-------");
+        console.log("(CC) genetic Request called...");
         const queryParamsFormatted = new URLSearchParams(queryParams).toString();
         const url = this.BASE_URL + endpoint + "?" + queryParamsFormatted;
-        console.log("\tsending", verb , "request to", url);
+        console.log("..", verb , "request", url);
 
         let fetchData = {
             method: verb,

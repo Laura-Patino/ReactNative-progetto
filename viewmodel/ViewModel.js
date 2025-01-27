@@ -216,9 +216,10 @@ export default class ViewModel {
 
         try {
             const order = await CommunicationController.createOrder(mid, bodyParams);
+            
             return order;
         } catch (error) {
-            console.error("Errore durante l'acquisto del menu:", error);
+            console.log("Errore durante l'acquisto del menu:", error); //console.error
         }
     }
 
