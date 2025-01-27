@@ -9,7 +9,8 @@ export default class ViewModelFormAccount {
     }
 
     static validateCardFullName(cardFullName) {
-        return cardFullName && cardFullName.length > 0 && cardFullName.length <= 30;
+        console.warn("lunghezza nome full:", cardFullName.length);
+        return cardFullName && cardFullName.length > 0 && cardFullName.length <= 31;
     }
 
     static validateCardNumber(cardNumber) {

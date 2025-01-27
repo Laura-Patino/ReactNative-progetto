@@ -30,6 +30,25 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
         );
     };
 
+    const getDateDeliveryFormatted = (isoString) => {
+        const date = new Date(isoString);
+        const giornoConsegna = date.toLocaleDateString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        return giornoConsegna;
+    }
+
+    const getTimeDeliveryFormatted = (isoString) => {  
+        const date = new Date(isoString);
+        const oraConsegna = date.toLocaleTimeString("it-IT", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        return oraConsegna;
+    }
+
     const fetchAllPositions = async () => {
         try {
             step = step +1;
@@ -45,6 +64,10 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
 
             if (orderStatus === "ON_DELIVERY") { //orderStatus-> response.status
                 console.log("\tON_DELIVERY.....", step);   
+                setMenu({
+                    name: menuResponse.name,
+                    expectedDeliveryTimestamp: response.expectedDeliveryTimestamp,
+                })
                 setMarkers([
                     {id: 1, latitude: response.deliveryLocation.lat, longitude: response.deliveryLocation.lng, title: "La tua posizione", image: imageUser},
                     {id: 2, latitude: menuResponse.location.lat, longitude: menuResponse.location.lng, title: menuResponse.name, image: imageMenu},
@@ -52,6 +75,10 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
                 ]);
             } else if (orderStatus === "COMPLETED") {
                 console.log("\tCOMPLETED.....", step);
+                setMenu({
+                    name: menuResponse.name,
+                    deliveryTimestamp: response.deliveryTimestamp,
+                })
                 setMarkers([
                     {id: 1, latitude: response.deliveryLocation.lat, longitude: response.deliveryLocation.lng, title: "La tua posizione", image: imageUser},
                     {id: 2, latitude: menuResponse.location.lat, longitude: menuResponse.location.lng, title: menuResponse.name, image: imageMenu}
@@ -105,7 +132,7 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
                         coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                         title={marker.title}
                     >
-                        <Image source={marker.image}  style={{width: 40, height: 40}}/>
+                        <Image source={marker.image} resizeMode='center' style={{width: 35, height: 35}}/>
                     </Marker>
                 ))}
                 <Polyline
@@ -120,11 +147,13 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
                         <View>
                             <Text style={[globalStyles.textNormalItalic, {color: 'grey'}]}>Ordine #{orderId}</Text>
                             <Text style={globalStyles.textNormalRegular}>Il tuo ordine <Text style={globalStyles.textNormalBold}>{menu.name}</Text> è in arrivo</Text>
+                            <Text style={globalStyles.textNormalRegular}>Consegna prevista: {getDateDeliveryFormatted(menu.expectedDeliveryTimestamp)} alle {getTimeDeliveryFormatted(menu.expectedDeliveryTimestamp)}</Text>
+                            
                         </View>
                     ) : (
                         <View>
                             <Text style={[globalStyles.textNormalItalic, {color: 'grey'}]}>Ordine #{orderId}</Text>
-                            <Text style={globalStyles.textNormalRegular}>Il tuo ordine <Text style={globalStyles.textNormalBold}>{menu.name}</Text> è stato consegnato</Text>
+                            <Text style={globalStyles.textNormalRegular}>Il tuo ordine <Text style={globalStyles.textNormalBold}>{menu.name}</Text> è stato consegnato alle {getTimeDeliveryFormatted(menu.deliveryTimestamp)} del {getDateDeliveryFormatted(menu.deliveryTimestamp)}</Text>
                         </View>
                     )
                 }

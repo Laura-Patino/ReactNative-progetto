@@ -105,12 +105,12 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
 
                     <View style={globalStyles.spaceArea}></View>
                     <Text style={globalStyles.textBigBold}>Dati carta di credito</Text>
-                    <View style={globalStyles.underline}></View>
+                    <View style={globalStyles.underline}></View> 
                 
                     <Text style={styles.inputLabel}>Nome completo sulla carta</Text>
                     {errors.cardFullName && <Text style={styles.warningText}>{errors.cardFullName}</Text>}
                     <TextInput 
-                        onChangeText={(input) => setUserFields({...userFields, cardFullName: input.trim()})}
+                        onChangeText={(input) => setUserFields({...userFields, cardFullName: input})}
                         maxLength={31} 
                         defaultValue={userData.cardFullName}
                         style={[styles.input, errors.cardFullName && styles.inputErrorColor]}
@@ -138,7 +138,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                                 keyboardType='numeric-pad'
                                 placeholder={"MM"}
                                 style={[globalStyles.textBigRegular, errors.cardExpireMonth && styles.inputErrorColor]}
-                            >{userData.cardExpireMonth.toString().padStart(2, '0')}</TextInput>
+                            >{userData.cardExpireMonth?.toString().padStart(2, '0')}</TextInput>
                             <Text style={{textAlignVertical: 'center'}}>/</Text>
                             <TextInput 
                                 onChangeText={(input) => setUserFields({...userFields, cardExpireYear: parseInt(input)})}  
