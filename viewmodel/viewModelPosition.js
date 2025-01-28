@@ -35,7 +35,7 @@ export default class ViewModelPosition {
 
     static async getAddressFromCoordinates(coordinates) {
       //restituisce un array di dimensione 1 con l'indirizzo
-      console.log("----Conversione coordinate in indirizzo----")
+      console.log("Conversione coordinate in indirizzo:")
       try {
         const address = await Location.reverseGeocodeAsync(coordinates);
         console.log("(VMP) Indirizzo obj:", address[0].formattedAddress);

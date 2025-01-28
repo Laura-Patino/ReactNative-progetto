@@ -94,8 +94,8 @@ export default function App() {
       const sessione = await viewModel.initializeApp();
       setSessionUser(sessione);
 
-      if (sessione && !sessione.firstRun) {
-        console.log('Not first run....');
+      if (sessione) { //&& !sessione.firstRun solo se secondo avvio (eliminato)
+        console.log('Asking for position permission...');
         await getCoordinates();
       } 
     } catch (error) {
@@ -128,7 +128,7 @@ export default function App() {
     );
   } 
 
-  if (sessionUser && !sessionUser.firstRun && permissionPosition && !coordinates) {
+  if (sessionUser && permissionPosition && !coordinates) { //&& permissionPosition
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>

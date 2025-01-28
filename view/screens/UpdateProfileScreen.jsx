@@ -118,7 +118,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                     <Text style={styles.inputLabel}>Numero carta</Text>
                     {errors.cardNumber && <Text style={styles.warningText}>{errors.cardNumber}</Text>}
                     <TextInput 
-                        onChangeText={(input) => setUserFields({...userFields, cardNumber: input})}
+                        onChangeText={(input) => setUserFields({...userFields, cardNumber: input.trim()})}
                         maxLength={16} 
                         inputMode='decimal'
                         keyboardType='decimal-pad'

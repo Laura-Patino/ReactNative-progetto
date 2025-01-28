@@ -131,14 +131,16 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
                         key={marker.id}
                         coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                         title={marker.title}
+                        zIndex={marker.id === 3 ? 1 : 0}
                     >
-                        <Image source={marker.image} resizeMode='center' style={{width: 35, height: 35}}/>
+                        <Image source={marker.image} resizeMode='contain' style={{width: 35, height: 35}}/>
                     </Marker>
                 ))}
                 <Polyline
                     coordinates={markers.map((marker) => ({latitude: marker.latitude, longitude: marker.longitude}))}
                     strokeColor="red"
                     strokeWidth={2}
+                    //zIndex={1}
                 ></Polyline>
             </MapView>
             <View style={{flex: 0.2, backgroundColor: 'white', paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center'}}>

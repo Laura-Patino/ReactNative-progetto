@@ -21,13 +21,13 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
 
     const updateUserInfo = async () => {
       if (userDetails != null) {
-        console.log('(Profile) Aggiornamento user:', userDetails);
+        console.log('(Profile) Aggiornamento user..');
         userDetails.cardNumber = userDetails.cardNumber.replace(/ /g, '');
         onUserUpdating(userDetails);
         onChangeScreen('UpdateProfilo');
       } else {
         const user = await viewModel.getUserDetails();
-        console.log('(Profile) Registrazione user:', user);
+        console.log('(Profile) Registrazione user..');
         onUserUpdating(user);
         onChangeScreen('UpdateProfilo');
       }

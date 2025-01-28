@@ -51,7 +51,7 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
         } else {
             setCanDoOrder(false);
             let missing = [];
-            if (!permissionGranted) missing.push('Negato l\'accesso alla tua posizione');
+            if (!permissionGranted) missing.push('Hai negato l\'accesso alla tua posizione');
             if (!profileCompleted) missing.push('Non hai ancora completato il profilo');
             if (hasOrderInProgress) missing.push('Hai ancora un ordine in corso, attendi la consegna');
             setMissingAllowances(missing);

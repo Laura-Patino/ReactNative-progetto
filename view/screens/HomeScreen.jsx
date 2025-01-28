@@ -14,7 +14,6 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
   const [address, setAddress] = useState(null);
 
   const convertCoordinatesToAddress = async (coords) => {
-    console.log("(HS) Converting coordinates to address...");
     const res =  await ViewModelPosition.getAddressFromCoordinates(coords);
     console.warn('(HS) Address:', res);
     setAddress(res);
