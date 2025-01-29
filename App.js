@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, AppState, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { globalStyles, fonts } from './styles/global';
 import { useFonts } from 'expo-font';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 // aggiornare npm etc: npm install expo@~52.0.26 oppure npm install react-native@0.76.6 -> npx expo install
 
 export default function App() {
+  const viewModel = new ViewModel();
   
   const [fontsLoaded] = useFonts({
     [fonts.italic]: require('./assets/fonts/RedHatDisplay-Italic.ttf'),
@@ -35,6 +36,7 @@ export default function App() {
 
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [sessionUser, setSessionUser] = useState(null);
+
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [userData, setUserData] = useState(null);
 
@@ -73,6 +75,9 @@ export default function App() {
         });
       } else {
         console.log('(3.1) Cannot use location');
+        //TODO: alert manda in background l'app, cambiando l'ultima schermata visualizzata
+        //anzichè mostrare un alert, mostrare un messaggio (View) che non si ha dato l'autorizzazione
+        //oppure nulla e lasciare Milano
         
         Alert.alert(
           'Lettura posizione non autorizzata', 
@@ -80,7 +85,7 @@ export default function App() {
           {
             text: 'OK',
             onPress: () => console.log('OK Pressed')
-          }
+          },
         ]);
       }
     } catch (error) {
@@ -90,14 +95,21 @@ export default function App() {
 
   init = async () => {
     try {
-      const viewModel = new ViewModel();
       const sessione = await viewModel.initializeApp();
       setSessionUser(sessione);
+
+      if (sessione && !sessione.firstRun) {
+        console.log('(App) Secondo avvio');
+        //TODO: recuperare l'ultima schermata visualizzata dal utente dal AsyncStorage
+        const lastScreen = await viewModel.getLastScreenFromAsyncStorage();
+        console.warn('(App) Ultima schermata salvata:', lastScreen);
+      }
 
       if (sessione) { //&& !sessione.firstRun solo se secondo avvio (eliminato)
         console.log('Asking for position permission...');
         await getCoordinates();
       } 
+      
     } catch (error) {
       console.error("Errore durante l'inizializzazione dell'App: ", error);
     } finally {
@@ -111,17 +123,45 @@ export default function App() {
       if (!sessionUser) {
         await init();
       }
-      
     };
 
     initializeApp();
   }, []); //sessionUser
+
+  //Gestione cambio di stato App
+  useEffect(() => {
+    //eseguito solo al cambio di stato dell'app (nextAppState = active o background)
+    const handleAppStateChange = async (nextAppState) => {
+      console.warn('(AppState)', nextAppState, 'con currentScreen:', currentScreen);
+      
+      if (nextAppState === 'background') {
+        console.warn('(AppState) App in background');
+
+        try {
+          console.log("\tSessione:", viewModel);
+          console.log("\tSalvataggio ultima schermata...");
+          await viewModel.saveLastScreenOnAsyncStorage(currentScreen);
+        } catch (e) {
+          console.error('Errore salvataggio ultima schermata nel AsyncStorage:', e);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+      console.warn('(AppState) subscription removed');
+    }
+  }, [currentScreen]);
 
   if (isLoading || !fontsLoaded) { //|| !sessionUser || permissionPosition === null) {
     return (
       <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
         <View>
           <Text style={globalStyles.logo}>Mangia e Basta </Text>
+          { permissionPosition && <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento posizione...</Text>
+          }
           <ActivityIndicator size='large' color='yellow'/>
         </View>
       </SafeAreaView> 

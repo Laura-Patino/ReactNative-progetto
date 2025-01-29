@@ -47,11 +47,10 @@ export default function LastOrderScreen({onChangeScreen}) {
           <View style={{ marginBottom: 10, marginHorizontal:15}}>
               <Text style={globalStyles.headerTitle}> Ultimo ordine</Text>
           </View>
-          <View style={[styles.bodyContent, {justifyContent: 'center', alignItems: 'center'}]}>
+          <View style={styles.bodyContent}>
             <Text style={styles.warningText}>Non hai ancora effettuato alcun ordine.</Text>
-            <Text style={globalStyles.textNormalRegular}>Vedi i menu più vicini a te nella pagina principale. {"\n"} 
-              Una volta selezionato il menu, potrai effettuare l'ordine e visualizzarlo in questa pagina.
-            </Text>
+            <Text style={globalStyles.textNormalRegular}>Vedi i menu più vicini a te nella pagina principale.</Text> 
+            <Text style={[globalStyles.textNormalRegular, {paddingHorizontal: 15}]}>Una volta selezionato il menu, potrai effettuare l'ordine e visualizzarlo in questa pagina.</Text>
             <View style={{marginTop: 20}}/>
             <Button title="Vedi i menu" color={'green'} onPress={() => onChangeScreen('Home')} />
           </View>

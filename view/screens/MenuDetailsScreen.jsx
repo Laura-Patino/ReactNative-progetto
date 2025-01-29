@@ -41,7 +41,7 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
     const orderAllowed = async () => {
         console.log('Check if order is allowed...');
         
-        const permissionGranted = await ViewModelPosition.askPermission();
+        const permissionGranted = await ViewModelPosition.checkOnlyPermission();
         const profileCompleted = await viewModel.userIsRegistered();
         const hasOrderInProgress = await viewModel.hasOrderInProgress();
         console.log('(MDS) Permission position:', permissionGranted, ' Profile:', profileCompleted, ' OrderInProgress:', hasOrderInProgress);

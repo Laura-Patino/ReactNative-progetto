@@ -9,7 +9,7 @@ export default class ViewModelFormAccount {
     }
 
     static validateCardFullName(cardFullName) {
-        console.warn("lunghezza nome full:", cardFullName.length);
+        //console.warn("lunghezza nome full:", cardFullName.length);
         return cardFullName && cardFullName.length > 0 && cardFullName.length <= 31;
     }
 
@@ -29,6 +29,6 @@ export default class ViewModelFormAccount {
     }
 
     static validateCardCVV(cardCVV) {
-        return cardCVV && cardCVV.length === 3;
+        return cardCVV && cardCVV.length === 3 && !isNaN(Number(cardCVV)); //MODIFICATO controllo che siano solo numeri
     }
 }

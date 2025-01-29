@@ -118,7 +118,7 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
     }
 
     return (
-        <View style={{flex: 1, borderTopLeftRadius: 10, borderTopRightRadius: 10, overflow: 'hidden'}}>
+        <View style={{flex: 1, borderTopLeftRadius: 10, borderTopRightRadius: 10}}> 
             {/* <Text style={globalStyles.textBigRegular}>Stato ordine: {orderStatus}</Text> */}
             <MapView 
             style={{flex: 1}} 

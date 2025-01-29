@@ -10,7 +10,7 @@ export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#327432', //'#859F3D', //F6FCDF
-
+        paddingTop: 10,
         //alignItems: 'center',
         //justifyContent: 'flex-end',
     }, 

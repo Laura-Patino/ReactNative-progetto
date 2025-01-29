@@ -19,6 +19,15 @@ export default class ViewModelPosition {
         return canUseLocation;
     }
 
+    static checkOnlyPermission = async () => { //AGGIUNTO: verifico solo se ho già i permessi per DettagliMenu
+      let canUseLocation = false;
+      const grantedPermission = await Location.getForegroundPermissionsAsync();
+      if (grantedPermission.status === 'granted') { 
+        canUseLocation = true;
+      }
+      return canUseLocation;
+    }
+
     static getCurrentLocation = async () => {
       try {
         const location = await Location.getCurrentPositionAsync({

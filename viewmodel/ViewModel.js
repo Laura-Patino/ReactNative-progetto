@@ -17,6 +17,22 @@ export default class ViewModel {
         this.firstRun = null
     }
 
+    async saveLastScreenOnAsyncStorage(screen) {
+        try {
+            await StorageManager.setItemByKey('lastScreen', screen);
+        } catch (error) {
+            console.error("(VM) Errore salvataggio dell'ultimo screen:", error);
+        }
+    }
+
+    async getLastScreenFromAsyncStorage() {
+        try {
+            return await StorageManager.getItemByKey('lastScreen');
+        } catch (error) {
+            console.error("(VM) Errore recupero dell'ultimo screen:", error);
+        }
+    }
+
     getSessionUser() {
         return {
             sid: this.sid,
