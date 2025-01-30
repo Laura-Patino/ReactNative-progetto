@@ -74,9 +74,13 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
          
         console.log('\tMenu:', selectedMenuMid);
 
-        if (coords == null) getMenuDetails();  //TODO: forse modifica, chiedere la posizione al click di un dettaglio menu
-        else getMenuDetails(coords.latitude, coords.longitude);
-
+        if (coords == null) { //TODO: forse modifica, chiedere la posizione al click di un dettaglio menu
+            console.log('(MDS) No coordinates');
+            getMenuDetails();
+        } else {
+            console.log('(MDS) Coordinates:', coords.latitude, coords.longitude);
+            getMenuDetails(coords.latitude, coords.longitude);
+        }
         orderAllowed();
     }, []);
 

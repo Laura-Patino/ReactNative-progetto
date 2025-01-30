@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, Button, ActivityIndicator, StyleSheet, ScrollView, TextInput, Modal, Image } from 'react-native';
+import { View, Text, Pressable, Button, StyleSheet, ScrollView, TextInput, Modal, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import ViewModel from '../../viewmodel/ViewModel';
 import ViewModelFormAccount from '../../viewmodel/ViewModelFormAccount';

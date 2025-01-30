@@ -33,6 +33,38 @@ export default class ViewModel {
         }
     }
 
+    async saveUserDataOnAsyncStorage(userData) {
+        try {
+            await StorageManager.setItemByKey('userData', userData);
+        } catch (error) {
+            console.error("(VM) Errore salvataggio dati utente in AsyncStorage:", error);  
+        }
+    }
+
+    async getUserDataFromAsyncStorage() {
+        try {
+            return await StorageManager.getItemByKey('userData');
+        } catch (error) {
+            console.error("(VM) Errore recupero dati utente da AsyncStorage:", error);
+        }
+    }
+
+    async saveSelectedMenuOnAsyncStorage(selectedMenu) {
+        try {
+            await StorageManager.setItemByKey('selectedMenu', selectedMenu);
+        } catch (error) {
+            console.error("(VM) Errore salvataggio menu selezionato in AsyncStorage:", error);
+        }
+    }
+
+    async getSelectedMenuFromAsyncStorage() {
+        try {
+            return await StorageManager.getItemByKey('selectedMenu');
+        } catch (error) {
+            console.error("(VM) Errore recupero menu selezionato da AsyncStorage:", error);
+        }
+    }
+
     getSessionUser() {
         return {
             sid: this.sid,
@@ -68,7 +100,7 @@ export default class ViewModel {
             
             this.sid = sessionKeys.sid;
             this.uid = sessionKeys.uid;
-            console.log("\tRegistrato! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
+            console.log("Registrato! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
         } catch (err) {
             console.log("Errore durante la registrazione!", err);
         }
@@ -79,14 +111,14 @@ export default class ViewModel {
 
         this.sid =  await StorageManager.getSID();
         this.uid = await StorageManager.getUID();
-        console.log("\tLogin! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
+        console.log("Login! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
     }
 
     async fetchAllMenus(latitude, longitude) {
         console.log("(VM) Richiesta di tutti i menu...");
         try {
             const allmenus = await CommunicationController.getMenus(this.sid, latitude, longitude);
-            console.log("\t...Ricevuti", allmenus.length); 
+            //console.log("\t...Ricevuti", allmenus.length); 
             return allmenus;
         } catch (error) {
             console.error("Errore nel recupero di tutti i menu:", error);
@@ -98,7 +130,7 @@ export default class ViewModel {
             const menuImageFromDB = await this.db.getImageMenu(mid, imageVersion); //menu in DB e versione immagine corrispondono
 
             if (menuImageFromDB) {
-                console.log("(VM)...Menu trovato nel db, versione immagine corrispondenti");
+                console.log("(VM)...Menu ", mid ,"trovato nel db, versione immagine corrispondenti");
                 return menuImageFromDB.image;
             }
 
@@ -110,12 +142,11 @@ export default class ViewModel {
                 imageWithPrefix = "data:image/png;base64," + newImageFromServer.base64;
 
             if (menuInfoFromDB && menuInfoFromDB.imageVersion !== imageVersion) {
-                console.warn("(VM)...Menu", mid ," trovato nel db, ma immagini diverse [", menuInfoFromDB.imageVersion, imageVersion, "]");
+                console.log("(VM)...Menu", mid ," trovato nel db, ma immagini diverse [", menuInfoFromDB.imageVersion, imageVersion, "]");
                 await this.db.updateMenuImage(mid, imageVersion, imageWithPrefix);
                 return imageWithPrefix;
             } else {
-                console.warn("(VM)...Menu non trovato nel db");
-                //console.log("Immagine dal server:", newImageFromServer.base64);
+                //console.log("(VM)...Menu ", mid, "nuovo, non trovato nel db");
                 await this.db.insertMenuImage(mid, imageVersion, imageWithPrefix);
                 return imageWithPrefix;
                 
@@ -232,7 +263,6 @@ export default class ViewModel {
 
         try {
             const order = await CommunicationController.createOrder(mid, bodyParams);
-            
             return order;
         } catch (error) {
             console.log("Errore durante l'acquisto del menu:", error); //console.error

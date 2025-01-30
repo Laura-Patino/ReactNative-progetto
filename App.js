@@ -99,10 +99,22 @@ export default function App() {
       setSessionUser(sessione);
 
       if (sessione && !sessione.firstRun) {
-        console.log('(App) Secondo avvio');
         //TODO: recuperare l'ultima schermata visualizzata dal utente dal AsyncStorage
-        const lastScreen = await viewModel.getLastScreenFromAsyncStorage();
-        console.warn('(App) Ultima schermata salvata:', lastScreen);
+        const lastScreenFromStorage = await viewModel.getLastScreenFromAsyncStorage();
+        console.warn('(App) Ultima schermata salvata:', lastScreenFromStorage);
+        if (lastScreenFromStorage === 'UpdateProfilo') {
+          const userFromStorage = await viewModel.getUserDataFromAsyncStorage();
+          console.warn(userFromStorage);
+          setUserData(userFromStorage);
+          //setCurrentScreen('UpdateProfilo');
+          
+        } else if (lastScreenFromStorage === 'Dettagli') {
+          const menuFromStorage = await viewModel.getSelectedMenuFromAsyncStorage();
+          console.warn(menuFromStorage);
+          setSelectedMenu(menuFromStorage);
+          //setCurrentScreen('Dettagli');
+        }
+        setCurrentScreen(lastScreenFromStorage);
       }
 
       if (sessione) { //&& !sessione.firstRun solo se secondo avvio (eliminato)
@@ -135,12 +147,17 @@ export default function App() {
       console.warn('(AppState)', nextAppState, 'con currentScreen:', currentScreen);
       
       if (nextAppState === 'background') {
-        console.warn('(AppState) App in background');
+        //console.warn('(AppState) App in background');
 
         try {
-          console.log("\tSessione:", viewModel);
-          console.log("\tSalvataggio ultima schermata...");
+          //console.log("\tSalvataggio ultima schermata...");
           await viewModel.saveLastScreenOnAsyncStorage(currentScreen);
+
+          if (currentScreen === 'UpdateProfilo') {
+            await viewModel.saveUserDataOnAsyncStorage(userData);
+          } else if (currentScreen === 'Dettagli') {
+            await viewModel.saveSelectedMenuOnAsyncStorage(selectedMenu);
+          }
         } catch (e) {
           console.error('Errore salvataggio ultima schermata nel AsyncStorage:', e);
         }

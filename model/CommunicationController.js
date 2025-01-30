@@ -28,7 +28,7 @@ export default class CommunicationController {
         const status = httpResponse.status;
         console.log("\tStatus: ", status);
         if (status === 204) {
-            console.log("(0) OK, no content to return");
+            //console.log("(0) OK, no content to return");
             return;
         } else if (status >= 200 && status < 300) {
             let deserializedObj = await httpResponse.json();

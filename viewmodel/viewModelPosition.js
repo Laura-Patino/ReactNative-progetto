@@ -33,7 +33,6 @@ export default class ViewModelPosition {
         const location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
         });
-        //console.log('(3.1)', location);
         return location;
       } catch (error) {
         console.error('(3.1) Error getting current location:', error);

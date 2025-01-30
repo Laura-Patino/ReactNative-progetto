@@ -90,6 +90,8 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
     }
 
     useEffect(() => {
+        fetchAllPositions();
+        
         if (orderStatus === "ON_DELIVERY") {
             console.log("---------Mappa2---------");
             intervalId = setInterval(() => {
