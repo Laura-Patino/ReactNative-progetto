@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import { useEffect, useState } from 'react';
 import ViewModel from '../../viewmodel/ViewModel';
@@ -15,7 +15,7 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
 
   const convertCoordinatesToAddress = async (coords) => {
     const res =  await ViewModelPosition.getAddressFromCoordinates(coords);
-    console.warn('(HS) Address:', res);
+    //console.warn('(HS) Address:', res);
     setAddress(res);
   }
 

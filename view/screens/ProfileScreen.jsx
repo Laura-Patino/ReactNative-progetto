@@ -151,6 +151,7 @@ export default function ProfileScreen({onChangeScreen, onUserUpdating}) {
                 <Text style={globalStyles.textNormalBold}> Ultimo ordine</Text>
               </View>
               <View style={globalStyles.underline}></View>
+              
               {userDetails.lastOid && lastOrderDetails && menuInfo ? (
                 <View style={{flexDirection: 'row', marginVertical: 7, borderWidth: 2, borderColor: 'lightgrey', borderRadius: 10}}>
                   <Image source={{uri: menuInfo.image}} style={[globalStyles.smallImage, {borderBottomLeftRadius: 10, borderTopLeftRadius: 10}]} />

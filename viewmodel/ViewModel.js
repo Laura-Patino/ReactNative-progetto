@@ -136,7 +136,7 @@ export default class ViewModel {
             const menuImageFromDB = await this.db.getImageMenu(mid, imageVersion); //menu in DB e versione immagine corrispondono
 
             if (menuImageFromDB) {
-                console.log("(VM)...Menu ", mid ,"trovato nel db, versione immagine corrispondenti");
+                console.log("(VM)...Menu", mid ,"trovato nel db, versione immagine corrispondenti");
                 return menuImageFromDB.image;
             }
 
@@ -234,7 +234,9 @@ export default class ViewModel {
     async updateUserDetails(userData) {
         try {
             await CommunicationController.updateUserInfo(this.uid, this.sid, userData);
-            await StorageManager.setItemByKey("isRegister", true);
+            if (await StorageManager.getItemByKey("isRegister") === null) {
+                await StorageManager.setItemByKey("isRegister", true);
+            }
             return "Dati utente aggiornati con successo!";
         } catch (error) {
             console.error("Errore durante l'aggiornamento dei dati dell'utente:", error);

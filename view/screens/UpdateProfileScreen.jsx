@@ -24,7 +24,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
     });
 
     const handleSubmitForm = async () => {
-        console.log('(UP) Dati aggiornati:', userFields);
+        console.log('(UP) Dati da aggiornare:', userFields);
         //Sono stati aggiornati tutti i dati? (tranne lastOid e orderStatus) se si posso inviare i dati
         //altrimenti mostro un testo per informare quali campi non vanno bene
         let newErrors = {};
@@ -129,7 +129,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                     {errors.cardExpireMonth && <Text style={styles.warningText}>{errors.cardExpireMonth}</Text>}
                     {errors.cardExpireYear && <Text style={styles.warningText}>{errors.cardExpireYear}</Text>}
                     <View flexDirection='row' >
-                        <View flexDirection="row" style={{borderWidth:1, borderColor: '#ccc', width: 120, justifyContent:'center', borderRadius: 4}}>
+                        <View flexDirection="row" style={[{borderWidth:1, borderColor: '#ccc', width: 120, justifyContent:'center', borderRadius: 4}, errors.cardExpireMonth && styles.inputErrorColor,  errors.cardExpireYear && styles.inputErrorColor]}>
                             <TextInput 
                                 onChangeText={ (input) => setUserFields({...userFields, cardExpireMonth: parseInt(input)}) }  
                                 returnKeyType='next'
@@ -137,7 +137,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                                 inputMode='numeric'
                                 keyboardType='numeric-pad'
                                 placeholder={"MM"}
-                                style={[globalStyles.textBigRegular, errors.cardExpireMonth && styles.inputErrorColor]}
+                                style={[globalStyles.textBigRegular]}
                             >{userData.cardExpireMonth?.toString().padStart(2, '0')}</TextInput>
                             <Text style={{textAlignVertical: 'center'}}>/</Text>
                             <TextInput 
@@ -146,7 +146,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
                                 inputMode='numeric'
                                 keyboardType='numeric-pad'
                                 placeholder={"AAAA"}
-                                style={[globalStyles.textBigRegular, errors.cardExpireYear && styles.inputErrorColor]}
+                                style={[globalStyles.textBigRegular]}
                             >{userData.cardExpireYear}</TextInput>
                         </View>
                     </View>

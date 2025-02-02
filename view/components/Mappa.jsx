@@ -5,13 +5,12 @@ import { globalStyles } from "../../styles/global";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
 //import images
+const imageDrone = require('../../assets/images/droneIcon1.png');
+const imageMenu = require('../../assets/images/menuIcon.png');
+const imageUser = require('../../assets/images/userIcon.png');
 const viewModel = new ViewModel();
 
-export default function Mappa({orderId, status, changeStatusOrder}) { //da menu devo ottenere la posizione del ristorante
-    const imageDrone = require('../../assets/images/droneIcon1.png');
-    const imageMenu = require('../../assets/images/menuIcon.png');
-    const imageUser = require('../../assets/images/userIcon.png');
-
+export default function Mappa({orderId, status, changeStatusOrder}) { 
     const [menu, setMenu] = useState(null);
     const [orderStatus, setOrderStatus] = useState(status);
     const [markers, setMarkers] = useState([]);
@@ -51,19 +50,19 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
 
     const fetchAllPositions = async () => {
         try {
-            step = step +1;
-            const response = await viewModel.getOrderDetails(orderId); //da qui ottengo la posizione del drone, e la delivery location
-            const menuResponse = await viewModel.fetchMenuDetails(response.mid);
+            step = step + 1;
+            const response = await viewModel.getOrderDetails(orderId); // ottengo la posizione del drone, posizione di consegna e tempo di consegna prevista o effettiva
+            const menuResponse = await viewModel.fetchMenuDetails(response.mid); //ottengo posizione menu e dati 
             setMenu(menuResponse);
 
             if (response.status !== orderStatus){
-                console.log(".....Stato ordine cambiato.....", orderStatus, " -> ", response.status);   
+                console.log("....Stato ordine cambiato....", orderStatus, " -> ", response.status);   
                 setOrderStatus(response.status);
                 changeStatusOrder(response.status);
             }
 
             if (orderStatus === "ON_DELIVERY") { //orderStatus-> response.status
-                console.log("\tON_DELIVERY.....", step);   
+                console.log("\tON_DELIVERY....", step);   
                 setMenu({
                     name: menuResponse.name,
                     expectedDeliveryTimestamp: response.expectedDeliveryTimestamp,
@@ -74,7 +73,7 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
                     {id: 3, latitude: response.currentPosition.lat, longitude: response.currentPosition.lng, title: "Posizione drone", image: imageDrone},
                 ]);
             } else if (orderStatus === "COMPLETED") {
-                console.log("\tCOMPLETED.....", step);
+                console.log("\tCOMPLETED....", step);
                 setMenu({
                     name: menuResponse.name,
                     deliveryTimestamp: response.deliveryTimestamp,
@@ -89,9 +88,7 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
         }
     }
 
-    useEffect(() => {
-        fetchAllPositions();
-        
+    useEffect(() => {        
         if (orderStatus === "ON_DELIVERY") {
             console.log("---------Mappa2---------");
             intervalId = setInterval(() => {
@@ -113,7 +110,7 @@ export default function Mappa({orderId, status, changeStatusOrder}) { //da menu 
     if (markers.length === 0) {
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={[globalStyles.textNormalBold, {color: 'white'}]}>Caricamento Mappa...</Text>
+                <Text style={[globalStyles.textNormalBold, {color: 'white'}]}>Caricamento...</Text>
                 <ActivityIndicator size='large' color='yellow'/>
             </View>
         );
