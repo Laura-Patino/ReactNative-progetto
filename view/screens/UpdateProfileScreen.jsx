@@ -60,7 +60,7 @@ export default function UpdateProfileScreen({onChangeScreen, userData}) {
     
     useEffect(() => {
         console.log('----UpdateProfileScreen useEffect----');
-        console.log('(UP) Dati iniziali:', userData);
+       // console.log('(UP) Dati iniziali:', userData);
         
     }, []);
 

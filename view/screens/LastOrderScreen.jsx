@@ -75,9 +75,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', 
     alignItems: 'center', 
     justifyContent: 'center',
-    ///paddingTop: 10, 
-    //paddingBottom: 5,
-    //paddingHorizontal:15, 
     borderTopRightRadius: 15, 
     borderTopLeftRadius: 15,
   },
@@ -96,5 +93,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
+    //oppure ...StyleSheet.absoluteFillObject
   }
 });

@@ -2,10 +2,10 @@ export default class CommunicationController {
     static BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 
     static async genericRequest(endpoint, verb, queryParams, bodyParams) {
-        console.log("(CC) genetic Request called...");
+        //console.log("(CC) genetic Request called...");
         const queryParamsFormatted = new URLSearchParams(queryParams).toString();
         const url = this.BASE_URL + endpoint + "?" + queryParamsFormatted;
-        console.log("..", verb , "request", url);
+        console.log(verb , "request", url);
 
         let fetchData = {
             method: verb,
@@ -26,7 +26,7 @@ export default class CommunicationController {
         }
 
         const status = httpResponse.status;
-        console.log("\tStatus: ", status);
+        //console.log("\tStatus: ", status);
         if (status === 204) {
             //console.log("(0) OK, no content to return");
             return;
@@ -90,7 +90,6 @@ export default class CommunicationController {
     }
 
     static async getMenuDetails(mid, sid, latitude=45.4642, longitude=9.19) {
-        // TODO: lat e lng riguardano la posizione dell'utente (per ora generici lat=45.4642, lng=9.19)
         let endpoint = "/menu/" + mid; //es. mid = 49
         let queryParams = {
             lat: latitude, 

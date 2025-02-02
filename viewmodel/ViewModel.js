@@ -17,9 +17,15 @@ export default class ViewModel {
         this.firstRun = null
     }
 
-    async saveLastScreenOnAsyncStorage(screen) {
+    async saveLastScreenOnAsyncStorage(screen, value) {
         try {
             await StorageManager.setItemByKey('lastScreen', screen);
+
+            if (screen === 'UpdateProfilo') {
+                await StorageManager.setItemByKey('userData', value);
+            } else if (screen === 'Dettagli') {
+                await StorageManager.setItemByKey('selectedMenu', value);
+            }
         } catch (error) {
             console.error("(VM) Errore salvataggio dell'ultimo screen:", error);
         }
@@ -33,13 +39,13 @@ export default class ViewModel {
         }
     }
 
-    async saveUserDataOnAsyncStorage(userData) {
-        try {
-            await StorageManager.setItemByKey('userData', userData);
-        } catch (error) {
-            console.error("(VM) Errore salvataggio dati utente in AsyncStorage:", error);  
-        }
-    }
+    // async saveUserDataOnAsyncStorage(userData) {
+    //     try {
+    //         await StorageManager.setItemByKey('userData', userData);
+    //     } catch (error) {
+    //         console.error("(VM) Errore salvataggio dati utente in AsyncStorage:", error);  
+    //     }
+    // }
 
     async getUserDataFromAsyncStorage() {
         try {
@@ -49,13 +55,13 @@ export default class ViewModel {
         }
     }
 
-    async saveSelectedMenuOnAsyncStorage(selectedMenu) {
-        try {
-            await StorageManager.setItemByKey('selectedMenu', selectedMenu);
-        } catch (error) {
-            console.error("(VM) Errore salvataggio menu selezionato in AsyncStorage:", error);
-        }
-    }
+    // async saveSelectedMenuOnAsyncStorage(selectedMenu) {
+    //     try {
+    //         await StorageManager.setItemByKey('selectedMenu', selectedMenu);
+    //     } catch (error) {
+    //         console.error("(VM) Errore salvataggio menu selezionato in AsyncStorage:", error);
+    //     }
+    // }
 
     async getSelectedMenuFromAsyncStorage() {
         try {
@@ -100,7 +106,7 @@ export default class ViewModel {
             
             this.sid = sessionKeys.sid;
             this.uid = sessionKeys.uid;
-            console.log("Registrato! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
+            console.log("Utente registrato correttamente. SID:", this.sid, "e UID:", this.uid);
         } catch (err) {
             console.log("Errore durante la registrazione!", err);
         }
@@ -111,7 +117,7 @@ export default class ViewModel {
 
         this.sid =  await StorageManager.getSID();
         this.uid = await StorageManager.getUID();
-        console.log("Login! sid:", this.sid, "\n\t\t\tuid:", this.uid, " firstRun:", this.firstRun);
+        console.log("Dati utente SID:", this.sid, "UID:", this.uid);
     }
 
     async fetchAllMenus(latitude, longitude) {
@@ -160,25 +166,24 @@ export default class ViewModel {
 
     async fetchMenuDetails(mid, latitude, longitude) { //49 
         try {
-            //Richiesta di DETAILS di un menu: mid, name, price, location, imageVersion, shortDescription, deliveryTime, longDescription
+            //Richiesta MenuDetails: mid, name, price, location, imageVersion, shortDescription, deliveryTime, longDescription
             const menuFromServer = await CommunicationController.getMenuDetails(mid, this.sid, latitude, longitude);
             const menuFromDB = await this.db.getMenuByMid(menuFromServer.mid); 
             // se non esite nel db -> return null, altrimenti menuFromDB = { mid, imageVersion e image }
 
             if (menuFromDB) {  
                 //se esiste il menu nel db
-                console.log("Menu esiste nel db...");//, menuFromDB);
 
                 if (menuFromDB.imageVersion === menuFromServer.imageVersion) {
                     //se le versioni sono uguali, restituisco il menu dal db
-                    console.log("\t...Versioni immagini uguali")
+                    //console.log("\t...Menu presente nel db. Versioni immagini uguali")
                     return {
                         ...menuFromServer,
                         image: menuFromDB.image,
                     }
                 } else {
                     //se le versioni sono diverse, aggiorno l'immagine nel db
-                    console.log("\t...Versioni immagini diverse")
+                    //console.log("\t...Menu presente nel db. Versioni immagini diverse")
                     //scarico dal server l'immagine aggiornata
                     const imageFromServer = await CommunicationController.getMenuImage(menuFromServer.mid, this.sid); 
                     //aggiorno l'immagine e la versione nel db
@@ -251,8 +256,6 @@ export default class ViewModel {
     }
 
     async buyMenu(mid, latitude, longitude) {
-        //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
-        //params: { sid, deliveryLocation}
         const bodyParams = {
             sid: this.sid,
             deliveryLocation: {
@@ -265,7 +268,7 @@ export default class ViewModel {
             const order = await CommunicationController.createOrder(mid, bodyParams);
             return order;
         } catch (error) {
-            console.log("Errore durante l'acquisto del menu:", error); //console.error
+            console.log("Errore durante l'acquisto del menu:", error); //error removed
         }
     }
 
@@ -284,7 +287,7 @@ export default class ViewModel {
     }
 
     async getOrderDetails(oid) {
-        //TODO: ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
+        // ottengo oid, mid, uid, creationTimeStamp, status, deliveryLocation, deliveryTimestamp, expectedDeliveryTimestamp, currentPosition
         try {
             const order = await CommunicationController.getOrderInfo(oid, this.sid);
             return order;

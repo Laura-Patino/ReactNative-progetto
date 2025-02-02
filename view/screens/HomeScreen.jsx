@@ -15,7 +15,7 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
 
   const convertCoordinatesToAddress = async (coords) => {
     const res =  await ViewModelPosition.getAddressFromCoordinates(coords);
-    //console.warn('(HS) Address:', res);
+    console.warn('(HS) Address:', res);
     setAddress(res);
   }
 
@@ -48,11 +48,10 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
       } else {
         console.log('\t(HS) Coordinates are not null:', coords.latitude, coords.longitude);
         // chiamo funzione per convertire le coordinate in indirizzo
-        convertCoordinatesToAddress(coords);
-        fetchMenusAndImage(coords.latitude, coords.longitude);
+        convertCoordinatesToAddress(coords).then(() => {
+          fetchMenusAndImage(coords.latitude, coords.longitude);
+        });
       }
-
-      //fetchUserDetails();
       
   }, []);
 
@@ -70,7 +69,8 @@ export default function HomeScreen({onChangeScreen, onMenuSelection, coords}) {
           </View>
           <View style={styles.bodyContent}>
             
-            <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a {address}</Text>
+            <Text style={[globalStyles.sottotitolo, {paddingBottom: 10}]}>Menu vicini a {address === null ? 'te' : address}</Text>
+            {/* <Text style={globalStyles.textNormalItalic}>{address}</Text> */}
 
             <FlatList 
               data={allMenus} 

@@ -25,7 +25,7 @@ export default class StorageManager {
     }
     static async setItemByKey(key, value) {
         try {
-            console.log("(SM) Salvataggio: ", key, "->", value);
+            console.log("(SM) Salvataggio:", key, "->", value);
             await AsyncStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
             console.error("Errore nel salvataggio dell'item: ", error);

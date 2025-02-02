@@ -71,16 +71,14 @@ export default function MenuDetailsScreen({selectedMenuMid, onChangeScreen, coor
 
     useEffect(() => {
         console.log('----MenuDetailsScreen useEffect----');
-         
-        console.log('\tMenu:', selectedMenuMid);
 
-        if (coords == null) { //TODO: forse modifica, chiedere la posizione al click di un dettaglio menu
+        if (coords == null) { //da eliminare coords === null 
             console.log('(MDS) No coordinates');
             getMenuDetails();
         } else {
             console.log('(MDS) Coordinates:', coords.latitude, coords.longitude);
             getMenuDetails(coords.latitude, coords.longitude);
-        }
+        } 
         orderAllowed();
     }, []);
 

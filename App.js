@@ -63,7 +63,6 @@ export default function App() {
       setPermissionPosition(canUseLocation);
 
       if (canUseLocation) {
-        
         console.log('(3.1) Can use location');
         
         const location = await ViewModelPosition.getCurrentLocation();
@@ -75,9 +74,6 @@ export default function App() {
         });
       } else {
         console.log('(3.1) Cannot use location');
-        //TODO: alert manda in background l'app, cambiando l'ultima schermata visualizzata
-        //anzichè mostrare un alert, mostrare un messaggio (View) che non si ha dato l'autorizzazione
-        //oppure nulla e lasciare Milano
         
         Alert.alert(
           'Lettura posizione non autorizzata', 
@@ -99,21 +95,20 @@ export default function App() {
       setSessionUser(sessione);
 
       if (sessione && !sessione.firstRun) {
-        //TODO: recuperare l'ultima schermata visualizzata dal utente dal AsyncStorage
         const lastScreenFromStorage = await viewModel.getLastScreenFromAsyncStorage();
         console.warn('(App) Ultima schermata salvata:', lastScreenFromStorage);
+
         if (lastScreenFromStorage === 'UpdateProfilo') {
           const userFromStorage = await viewModel.getUserDataFromAsyncStorage();
-          console.warn(userFromStorage);
+          //console.warn(userFromStorage);
           setUserData(userFromStorage);
-          //setCurrentScreen('UpdateProfilo');
           
         } else if (lastScreenFromStorage === 'Dettagli') {
           const menuFromStorage = await viewModel.getSelectedMenuFromAsyncStorage();
-          console.warn(menuFromStorage);
+          //console.warn(menuFromStorage);
           setSelectedMenu(menuFromStorage);
-          //setCurrentScreen('Dettagli');
         }
+        
         setCurrentScreen(lastScreenFromStorage);
       }
 
@@ -130,7 +125,6 @@ export default function App() {
   }
 
   useEffect(() => {
-    console.log('----App useEffect----');
     const initializeApp = async () => {
       if (!sessionUser) {
         await init();
@@ -138,26 +132,25 @@ export default function App() {
     };
 
     initializeApp();
-  }, []); //sessionUser
+  }, []); 
 
   //Gestione cambio di stato App
   useEffect(() => {
     //eseguito solo al cambio di stato dell'app (nextAppState = active o background)
     const handleAppStateChange = async (nextAppState) => {
-      console.warn('(AppState)', nextAppState, 'con currentScreen:', currentScreen);
+      console.log('(AppState)', nextAppState, 'con currentScreen:', currentScreen);
       
       if (nextAppState === 'background') {
-        //console.warn('(AppState) App in background');
-
         try {
           //console.log("\tSalvataggio ultima schermata...");
-          await viewModel.saveLastScreenOnAsyncStorage(currentScreen);
-
           if (currentScreen === 'UpdateProfilo') {
-            await viewModel.saveUserDataOnAsyncStorage(userData);
+            await viewModel.saveLastScreenOnAsyncStorage(currentScreen, userData); 
           } else if (currentScreen === 'Dettagli') {
-            await viewModel.saveSelectedMenuOnAsyncStorage(selectedMenu);
+            await viewModel.saveLastScreenOnAsyncStorage(currentScreen, selectedMenu);
+          } else {
+            await viewModel.saveLastScreenOnAsyncStorage(currentScreen);
           }
+
         } catch (e) {
           console.error('Errore salvataggio ultima schermata nel AsyncStorage:', e);
         }
@@ -168,7 +161,6 @@ export default function App() {
 
     return () => {
       subscription.remove();
-      console.warn('(AppState) subscription removed');
     }
   }, [currentScreen]);
 
@@ -185,18 +177,18 @@ export default function App() {
     );
   } 
 
-  if (sessionUser && permissionPosition && !coordinates) { //&& permissionPosition
-    return (
-      <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
-        <View>
-          <Text style={globalStyles.logo}>Mangia e Basta</Text>
-          <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento posizione...</Text>
+  // if (sessionUser && permissionPosition && !coordinates) { 
+  //   return (
+  //     <SafeAreaView style={{flex:1,justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' }}>
+  //       <View>
+  //         <Text style={globalStyles.logo}>Mangia e Basta</Text>
+  //         <Text style={[globalStyles.textBigRegular, {color: 'white', textAlign: 'center'}]}>Ottenimento posizione...</Text>
     
-          <ActivityIndicator size='large' color='yellow'/>
-        </View>
-      </SafeAreaView> 
-    );
-  }
+  //         <ActivityIndicator size='large' color='yellow'/>
+  //       </View>
+  //     </SafeAreaView> 
+  //   );
+  // }
 
   return (
     <SafeAreaView style={globalStyles.container}>

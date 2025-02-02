@@ -46,8 +46,8 @@ export default class ViewModelPosition {
       console.log("Conversione coordinate in indirizzo:")
       try {
         const address = await Location.reverseGeocodeAsync(coordinates);
-        console.log("(VMP) Indirizzo obj:", address[0].formattedAddress);
-        return address[0].street; //formattedAddress;
+        console.warn("(VMP) Indirizzo obj:", address[0]);
+        return address[0].street; //formattedAddress / street a volte risulta null (es. Piazza Frattini) 
       } catch (error) {
         console.error("Errore nella conversione delle coordinate in indirizzo:", error);
       }
