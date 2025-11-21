@@ -15,3 +15,25 @@ Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per 
 - **Stato consegna**. Dopo aver acquistato un menù, l'utente può visualizzare llo stato di consegna. Questa schermata riposta il menù acquistato, l'orario di consegna e lo stato di consegna (consegnato/in consegna). Se lo stato è "in consegna", l'utente vede su una mappa la posizione finale di consegna, il punto di partenza, e il punto attuale del drone. Se lo stato è "consegnato" l'utente visualizza, su una mappa, solo il punto di partenza e la destinazione. Questa schermata si deve aggiornare ogni 5 secondi.
 - **Salvataggio pagina**. L'applicazione deve ricordarsi quale pagina è stata visualizzata, in caso l'app venga terminata. In questo modo, al riavvio ricarica l'ultima pagina.
   
+## Screenshot dell'applicazione
+**Home Screen**. Elenco di tutti i menù nelle vicinanze.
+
+<img width="444" height="878" alt="Screenshot 2025-11-21 214937" src="https://github.com/user-attachments/assets/1301d4c3-1253-4304-b5c4-5ef0d8112a1a" />
+
+**Details Screen**. Dettagli del menù selezionato e possibilità di effettuare un ordine.
+
+<img width="430" height="876" alt="Screenshot 2025-11-21 214920" src="https://github.com/user-attachments/assets/41ea13be-c30f-42ac-99ff-c04042f2e6ac" />
+
+**Profile Screen**. Dati utente, pagamento e ultimo ordine effettuato.
+
+<img width="437" height="872" alt="Screenshot 2025-11-21 215200" src="https://github.com/user-attachments/assets/c7ec4716-c91f-4489-9ce9-a96918eb3089" />
+
+
+**Update Profile Screen**. Aggiornamento dei dati dell'utente
+
+<img width="428" height="883" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/2978cce8-54bb-4fc7-b71c-531bb195f0df" />
+
+**Order screen**. Ultimo ordine (dati e mappa).
+
+...
+
