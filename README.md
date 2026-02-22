@@ -18,22 +18,22 @@ Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per 
 ## Screenshot dell'applicazione
 **Home Screen**. Elenco di tutti i menù nelle vicinanze.
 
-<img width="444" height="878" alt="Screenshot 2025-11-21 214937" src="https://github.com/user-attachments/assets/1301d4c3-1253-4304-b5c4-5ef0d8112a1a" />
+<img width="300" height="600" alt="Screenshot 2025-11-21 214937" src="https://github.com/user-attachments/assets/1301d4c3-1253-4304-b5c4-5ef0d8112a1a" />
 
 **Details Screen**. Dettagli del menù selezionato e possibilità di effettuare un ordine.
 
-<img width="430" height="876" alt="Screenshot 2025-11-21 214920" src="https://github.com/user-attachments/assets/41ea13be-c30f-42ac-99ff-c04042f2e6ac" />
+<img width="300" height="600" alt="Screenshot 2025-11-21 214920" src="https://github.com/user-attachments/assets/41ea13be-c30f-42ac-99ff-c04042f2e6ac" />
 
 **Profile Screen**. Dati utente, pagamento e ultimo ordine effettuato.
 
-<img width="437" height="872" alt="Screenshot 2025-11-21 215200" src="https://github.com/user-attachments/assets/c7ec4716-c91f-4489-9ce9-a96918eb3089" />
+<img width="300" height="600" alt="Screenshot 2025-11-21 215200" src="https://github.com/user-attachments/assets/c7ec4716-c91f-4489-9ce9-a96918eb3089" />
 
 
 **Update Profile Screen**. Aggiornamento dei dati dell'utente
 
-<img width="428" height="883" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/2978cce8-54bb-4fc7-b71c-531bb195f0df" />
+<img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/2978cce8-54bb-4fc7-b71c-531bb195f0df" />
 
 **Order screen**. Ultimo ordine (dati e mappa).
+![OrderScreen](https://github.com/user-attachments/assets/d761db10-0dae-4114-9df8-9fe050df700e)
 
-...
 
