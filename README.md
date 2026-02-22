@@ -34,7 +34,7 @@ Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per 
 <img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/2978cce8-54bb-4fc7-b71c-531bb195f0df" />
 
 **Order screen**. Ultimo ordine (dati e mappa).
-<img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/d761db10-0dae-4114-9df8-9fe050df700e
-" />
+<img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/258f4c4c-9753-490e-889e-d946ed63fed4" />
+
 
 
