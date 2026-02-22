@@ -1,5 +1,5 @@
 # Mobile Computing first Project
-Cross-platform application using React Native.
+Cross-platform application using React Native. An example of usage is available in video/ProgettoReactNative.mp4
 
 # Progetto "Mangia e Basta" del corso di Mobile Computing
 L'obiettivo del progetto riguarda la creazione di un'applicazione mobile, concettualmente simile a Globo e Deliveroo, con la particolarità che gli ordini siano spediti tramite un drone (ovviamente fittizio).
@@ -34,6 +34,7 @@ Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per 
 <img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/2978cce8-54bb-4fc7-b71c-531bb195f0df" />
 
 **Order screen**. Ultimo ordine (dati e mappa).
+
 <img width="300" height="600" alt="Screenshot 2025-11-21 215227" src="https://github.com/user-attachments/assets/258f4c4c-9753-490e-889e-d946ed63fed4" />
 
 
