@@ -1,12 +1,13 @@
 # Mobile Computing first Project
 Cross-platform application using React Native. An example of usage is available in ProgettoReactNative.mp4
 
-# Progetto "Mangia e Basta" del corso di Mobile Computing
+# Progetto mobile "Mangia e Basta" del corso di Mobile Computing
 L'obiettivo del progetto riguarda la creazione di un'applicazione mobile, concettualmente simile a Globo e Deliveroo, con la particolarità che gli ordini siano spediti tramite un drone (ovviamente fittizio).
 Viene richiesto di gestire: un utente, il quale può scegliere tra diversi menù nelle sue vicinanze, visualizzare i dettagli dei menù, ordinare e tenere traccia di dove si trova l'ordine e visualizzare il proprio profilo più la cronologia degli ordini.
 
 La progettazione dello schema di navigazione e delle singole schermate è a scelta libera dello studente. I prototipi iniziali sono stati progettati su carta. 
 
+## Funzionalità
 Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per Android ed una cross-platform. Nello specifico per entrambi i progetti sono state richieste le seguenti funzionalità:
 - **Registrazione implicita**. Ogni utente dispone di un numero di sessione (SID) che lo identifica rispetto al server. Al primo avvio l'applicazione richiede un numero di sessione al server e poi lo memorizza in modo persistente. In tutte le comunicazioni tra client e server, il cliente indicherà il proprio numero di sessione.
 - **Profilo**. Nella schermata di profilo l'utente imposta i propri dati: nome e cognome, nominativo nella carta di credito, numero carta, data scadenza, cvv. Inoltre, dalla schermata di profilo l'utente può vedere l'ultimo ordine effettuato.
@@ -21,7 +22,7 @@ Anche in questo progetto, come per la versione in Adroid, la struttura del codic
 - Model: rappresenta i dati. Esiste e non va a chiamare mai alcuna funzione della View.
 - ViewModel: intermediario tra View e Model, parte logica del programma, prepara i dati che devono essere mostrati dalla View.
   
-## Screenshot dell'applicazione
+## Schermate dell'applicazione
 **Home Screen**. Elenco di tutti i menù nelle vicinanze.
 
 <img width="300" height="600" alt="Screenshot 2025-11-21 214937" src="https://github.com/user-attachments/assets/1301d4c3-1253-4304-b5c4-5ef0d8112a1a" />
