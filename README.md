@@ -17,7 +17,7 @@ Lo scopo di questo progetto è la creazione di due applicazioni, una nativa per 
 - **Salvataggio pagina**. L'applicazione deve ricordarsi quale pagina è stata visualizzata, in caso l'app venga terminata. In questo modo, al riavvio ricarica l'ultima pagina.
 
 ## Struttura del codice
-Anche in questo progetto, come per la versione in Adroid, la struttura del codice segue il modello MVVM (Model View ViewModel) che divide in tre componenti l'applicaione:
+Anche in questo progetto, come per la versione in Android, la struttura del codice segue il modello MVVM (Model View ViewModel) che divide in tre componenti l'applicazione:
 - View: mostra i dati e gestisce gli eventi di interfaccia.
 - Model: rappresenta i dati. Esiste e non va a chiamare mai alcuna funzione della View.
 - ViewModel: intermediario tra View e Model, parte logica del programma, prepara i dati che devono essere mostrati dalla View.
